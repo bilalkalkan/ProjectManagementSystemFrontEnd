@@ -20,4 +20,11 @@ connect.lock
 coverage/
 libpeerconnection.log
 testem.log
-typings/ 
+typings/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json 
