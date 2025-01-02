@@ -1,0 +1,133 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+:root {
+  --primary-color: #2196f3;
+  --secondary-color: #ff4081;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --background-light: #f5f7fa;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  background-color: var(--background-light);
+  color: #333;
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-typography {
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Kart stilleri */
+.mat-mdc-card {
+  border-radius: 12px !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mat-mdc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Buton stilleri */
+.mdc-button {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(45deg, var(--primary-color), #1976d2) !important;
+  background-color: var(--accent-color) !important;
+}
+
+.mat-mdc-raised-button.mat-accent {
+  background: linear-gradient(
+    45deg,
+    var(--secondary-color),
+    #e91e63
+  ) !important;
+}
+
+/* İkon stilleri */
+.mat-icon {
+  transition: transform 0.2s;
+}
+
+.mat-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Animasyonlu geçişler */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Özel scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Material tema ayarları */
+.mat-mdc-card-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+.mat-toolbar {
+  background: linear-gradient(45deg, var(--primary-color), #1976d2) !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Toolbar içindeki butonlar için stil */
+.mat-toolbar .mat-mdc-button {
+  color: white !important;
+}
+
+.mat-toolbar .mat-icon {
+  color: white !important;
+}
+
+/* Form elementleri için tema */
+.mat-form-field {
+  color: var(--text-primary) !important;
+}
+
+/* Liste elemanları için tema */
+.mat-mdc-list-item {
+  color: var(--text-primary) !important;
+}
+
+/* Dialog için tema */
+.mat-mdc-dialog-container {
+  background-color: var(--background-secondary) !important;
+  color: var(--text-primary) !important;
+}

@@ -1,0 +1,23 @@
+# Büyük dosyaları yoksay
+*.zip
+*.rar
+*.mp4
+build/
+dist/
+
+# IDE ve sistem dosyaları
+.DS_Store
+.idea/
+.vscode/
+*.log 
+
+# Angular özel
+.angular/
+.angular/cache/
+*.angular/cache
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+testem.log
+typings/ 
