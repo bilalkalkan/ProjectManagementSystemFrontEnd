@@ -1,0 +1,110 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+mat-card {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden;
+}
+
+.register-header {
+  text-align: center;
+  margin: -16px -16px 32px;
+  padding: 32px;
+  background: linear-gradient(135deg, #3f51b5, #2196f3);
+  color: white;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    margin: 8px 0 0;
+    opacity: 0.9;
+    font-size: 16px;
+  }
+}
+
+form {
+  padding: 0 24px 24px;
+}
+
+.form-row {
+  margin-bottom: 16px;
+
+  mat-form-field {
+    width: 100%;
+
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-outline {
+        background: #f8f9fa;
+      }
+    }
+  }
+}
+
+.form-actions {
+  margin-top: 32px;
+
+  button {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &[disabled] {
+      background: rgba(33, 150, 243, 0.5);
+    }
+  }
+}
+
+.form-footer {
+  margin-top: 24px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+
+  .login-link {
+    color: #2196f3;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Responsive tasarım
+@media (max-width: 768px) {
+  .register-container {
+    padding: 16px;
+    align-items: flex-start;
+  }
+
+  .register-header {
+    padding: 24px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  form {
+    padding: 0 16px 16px;
+  }
+}

@@ -283,12 +283,12 @@ export class ProjectDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get("id"));
+    const id = this.route.snapshot.paramMap.get("id") || "0";
     this.loadProject(id);
     this.loadTaskStats();
   }
 
-  loadProject(id: number) {
+  loadProject(id: string) {
     this.projectService.getProject(id).subscribe({
       next: (project) => {
         if (project) {
@@ -390,13 +390,15 @@ export class ProjectDetailComponent implements OnInit {
 
   loadTaskStats() {
     if (this.project) {
-      this.taskService.getProjectTasks(this.project.id).subscribe((tasks) => {
-        this.todoCount = tasks.filter((t) => t.status === "TODO").length;
-        this.inProgressCount = tasks.filter(
-          (t) => t.status === "IN_PROGRESS"
-        ).length;
-        this.completedCount = tasks.filter((t) => t.status === "DONE").length;
-      });
+      this.taskService
+        .getProjectTasks(this.project.id.toString())
+        .subscribe((tasks) => {
+          this.todoCount = tasks.filter((t) => t.status === "TODO").length;
+          this.inProgressCount = tasks.filter(
+            (t) => t.status === "IN_PROGRESS"
+          ).length;
+          this.completedCount = tasks.filter((t) => t.status === "DONE").length;
+        });
     }
   }
 }

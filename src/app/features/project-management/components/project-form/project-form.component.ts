@@ -99,7 +99,7 @@ import { MatButtonModule } from "@angular/material/button";
 export class ProjectFormComponent implements OnInit {
   projectForm: FormGroup;
   isEditMode = false;
-  projectId?: number;
+  projectId?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -116,15 +116,10 @@ export class ProjectFormComponent implements OnInit {
 
   ngOnInit() {
     this.isEditMode = this.route.snapshot.data["isEdit"] === true;
-    if (this.isEditMode) {
-      this.projectId = Number(this.route.snapshot.paramMap.get("id"));
-      this.loadProject();
-    }
-  }
-
-  loadProject() {
-    if (this.projectId) {
-      this.projectService.getProject(this.projectId).subscribe({
+    const id = this.route.snapshot.paramMap.get("id");
+    if (id) {
+      this.projectId = id;
+      this.projectService.getProject(id).subscribe({
         next: (project) => {
           if (project) {
             this.projectForm.patchValue({
@@ -144,26 +139,30 @@ export class ProjectFormComponent implements OnInit {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      const operation = this.isEditMode
-        ? this.projectService.updateProject(
-            this.projectId!,
-            this.projectForm.value
-          )
-        : this.projectService.createProject(this.projectForm.value);
+      if (this.projectId) {
+        this.projectService.updateProject(
+          this.projectId,
+          this.projectForm.value
+        );
+      } else {
+        this.projectService.createProject(this.projectForm.value);
+      }
 
-      operation.subscribe({
-        next: () => {
-          this.router.navigate(["/projects"]);
-        },
-        error: (error) => {
-          console.error(
-            `Proje ${
-              this.isEditMode ? "güncellenirken" : "oluşturulurken"
-            } hata oluştu:`,
-            error
-          );
-        },
-      });
+      this.projectService
+        .updateProject(this.projectId!, this.projectForm.value)
+        .subscribe({
+          next: () => {
+            this.router.navigate(["/projects"]);
+          },
+          error: (error) => {
+            console.error(
+              `Proje ${
+                this.isEditMode ? "güncellenirken" : "oluşturulurken"
+              } hata oluştu:`,
+              error
+            );
+          },
+        });
     }
   }
 }

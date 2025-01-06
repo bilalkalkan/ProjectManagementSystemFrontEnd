@@ -7,6 +7,13 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { ProfileComponent } from "./components/profile/profile.component";
 import { AuthGuard } from "../../core/guards/auth.guard";
+import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent, ProfileComponent],
@@ -23,6 +30,13 @@ import { AuthGuard } from "../../core/guards/auth.guard";
         canActivate: [AuthGuard],
       },
     ]),
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
   ],
 })
 export class UserManagementModule {}

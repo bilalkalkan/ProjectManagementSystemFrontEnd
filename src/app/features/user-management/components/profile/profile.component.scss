@@ -1,0 +1,191 @@
+.profile-container {
+  padding: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: flex-start;
+}
+
+mat-card {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden;
+}
+
+.profile-header {
+  text-align: center;
+  margin: -16px -16px 32px;
+  padding: 32px;
+  background: linear-gradient(135deg, #3f51b5, #2196f3);
+  color: white;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    margin: 8px 0 0;
+    opacity: 0.9;
+    font-size: 16px;
+  }
+}
+
+.profile-content {
+  padding: 0 24px 24px;
+}
+
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin: -80px 0 40px;
+
+  .avatar-wrapper {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    padding: 4px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      .change-avatar-btn {
+        opacity: 1;
+        transform: translate(25%, 25%) scale(1);
+      }
+
+      .profile-avatar {
+        filter: brightness(0.8);
+      }
+    }
+  }
+
+  .profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: filter 0.3s ease;
+  }
+
+  .change-avatar-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transform: translate(25%, 25%) scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease;
+    background: #2196f3;
+
+    &:hover {
+      background: #1976d2;
+    }
+  }
+}
+
+form {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  mat-form-field {
+    flex: 1;
+
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-outline {
+        background: #f8f9fa;
+      }
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  button {
+    min-width: 120px;
+    padding: 8px 24px;
+
+    &[color="primary"] {
+      background: #2196f3;
+
+      &:hover:not([disabled]) {
+        background: #1976d2;
+      }
+
+      &[disabled] {
+        background: rgba(33, 150, 243, 0.5);
+      }
+    }
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive tasarım
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
+  }
+
+  .profile-header {
+    padding: 24px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .profile-content {
+    padding: 0 16px 16px;
+  }
+
+  .avatar-section {
+    margin: -60px 0 32px;
+
+    .avatar-wrapper {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    button {
+      width: 100%;
+    }
+  }
+}

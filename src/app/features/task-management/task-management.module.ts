@@ -1,30 +1,35 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { SharedModule } from "../../shared/shared.module";
-import { RouterModule, Routes } from "@angular/router";
-import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { TaskListComponent } from "./components/task-list/task-list.component";
-import { TaskFormComponent } from "./components/task-form/task-form.component";
-import { TaskDetailComponent } from "./components/task-detail/task-detail.component";
 import { TaskBoardComponent } from "./components/task-board/task-board.component";
-
-const routes: Routes = [
-  { path: "", component: TaskBoardComponent },
-  { path: "new", component: TaskFormComponent },
-  { path: ":taskId", component: TaskDetailComponent },
-  { path: ":taskId/edit", component: TaskFormComponent },
-];
+import { SharedModule } from "../../shared/shared.module";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MatTableModule } from "@angular/material/table";
+import { MatCardModule } from "@angular/material/card";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { TaskGanttComponent } from "./components/task-gantt/task-gantt.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
+  declarations: [TaskListComponent, TaskBoardComponent, TaskGanttComponent],
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule,
-    RouterModule.forChild(routes),
-    TaskListComponent,
-    TaskFormComponent,
-    TaskDetailComponent,
-    TaskBoardComponent,
+    DragDropModule,
+    MatTableModule,
+    MatCardModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTooltipModule,
+    RouterModule.forChild([
+      { path: "", component: TaskListComponent },
+      { path: "board", component: TaskBoardComponent },
+      { path: "gantt", component: TaskGanttComponent },
+    ]),
   ],
 })
 export class TaskManagementModule {}

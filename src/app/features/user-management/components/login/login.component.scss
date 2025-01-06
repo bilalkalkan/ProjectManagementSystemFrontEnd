@@ -1,0 +1,152 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--accent-color) 100%
+  );
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo {
+    width: 80px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.forgot-password {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.submit-button {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--text-secondary);
+
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 0.5rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+::ng-deep {
+  .mat-form-field-prefix {
+    margin-right: 0.5rem;
+  }
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  .logo-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+
+    .logo-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--primary-color);
+    }
+
+    .logo-accent {
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: var(--accent-color);
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .brand-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 1rem 0 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-slogan {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+
+.favicon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+
+  .favicon-icon {
+    font-size: 32px;
+    color: var(--primary-color);
+  }
+}

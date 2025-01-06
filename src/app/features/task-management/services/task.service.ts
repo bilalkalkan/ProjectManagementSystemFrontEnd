@@ -1,122 +1,106 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable, of, map } from "rxjs";
 
 export interface Task {
-  id: number;
-  projectId: number;
+  id: string;
   title: string;
   description: string;
   status: "TODO" | "IN_PROGRESS" | "DONE";
-  priority: "HIGH" | "MEDIUM" | "LOW";
-  dueDate: Date;
-  progress: number;
-  assignee?: {
-    id: number;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  assignee: {
+    id: string;
     name: string;
     avatar: string;
   };
+  dueDate: Date;
+  progress: number;
 }
 
 @Injectable({
   providedIn: "root",
 })
 export class TaskService {
-  private tasks: Task[] = [
+  private dummyTasks: Task[] = [
     {
-      id: 1,
-      projectId: 1,
-      title: "API Geliştirme",
-      description: "REST API endpoint'lerinin oluşturulması",
+      id: "1",
+      title: "Frontend Tasarımı",
+      description: "Ana sayfa tasarımının güncellenmesi",
       status: "IN_PROGRESS",
       priority: "HIGH",
-      dueDate: new Date("2024-04-01"),
-      progress: 60,
       assignee: {
-        id: 1,
-        name: "Ahmet Yılmaz",
-        avatar: "assets/avatars/1.jpg",
+        id: "Ali Yılmaz",
+        name: "Ali Yılmaz",
+        avatar: "https://example.com/ali-yilmaz.jpg",
       },
+      dueDate: new Date("2024-03-25"),
+      progress: 50,
     },
     {
-      id: 2,
-      projectId: 1,
-      title: "UI Tasarımı",
-      description: "Dashboard sayfasının tasarlanması",
+      id: "2",
+      title: "API Entegrasyonu",
+      description: "Backend servisleri ile bağlantı kurulması",
       status: "TODO",
       priority: "MEDIUM",
-      dueDate: new Date("2024-04-05"),
-      progress: 0,
       assignee: {
-        id: 2,
+        id: "Ayşe Demir",
         name: "Ayşe Demir",
-        avatar: "assets/avatars/2.jpg",
+        avatar: "https://example.com/ayse-demir.jpg",
       },
+      dueDate: new Date("2024-03-28"),
+      progress: 0,
+    },
+    {
+      id: "3",
+      title: "Test Yazılması",
+      description: "Unit testlerin tamamlanması",
+      status: "DONE",
+      priority: "LOW",
+      assignee: {
+        id: "Mehmet Kaya",
+        name: "Mehmet Kaya",
+        avatar: "https://example.com/mehmet-kaya.jpg",
+      },
+      dueDate: new Date("2024-03-20"),
+      progress: 100,
     },
   ];
 
-  getProjectTasks(projectId: number): Observable<Task[]> {
-    const projectTasks = this.tasks.filter(
-      (task) => task.projectId === projectId
-    );
-    console.log("Proje görevleri:", projectTasks);
-    return of(projectTasks);
-  }
-
   getTasks(): Observable<Task[]> {
-    return of(this.tasks);
+    return of(this.dummyTasks);
   }
 
-  getTask(id: number): Observable<Task> {
-    const task = this.tasks.find((t) => t.id === id);
-    return of(task!);
+  getTaskById(id: string): Observable<Task | undefined> {
+    return of(this.dummyTasks.find((task) => task.id === id));
   }
 
-  updateTask(id: number, updates: Partial<Task>): Observable<Task> {
-    const index = this.tasks.findIndex((t) => t.id === id);
+  addTask(task: Omit<Task, "id">): Observable<Task> {
+    const newTask: Task = {
+      ...task,
+      id: (this.dummyTasks.length + 1).toString(),
+    };
+    this.dummyTasks.push(newTask);
+    return of(newTask);
+  }
+
+  updateTask(task: Task): Observable<Task> {
+    const index = this.dummyTasks.findIndex((t) => t.id === task.id);
     if (index !== -1) {
-      this.tasks[index] = { ...this.tasks[index], ...updates };
-      return of(this.tasks[index]);
+      this.dummyTasks[index] = task;
     }
-    throw new Error("Task not found");
+    return of(task);
   }
 
-  deleteTask(id: number): Observable<void> {
-    const index = this.tasks.findIndex((t) => t.id === id);
+  deleteTask(id: string): Observable<void> {
+    const index = this.dummyTasks.findIndex((t) => t.id === id);
     if (index !== -1) {
-      this.tasks.splice(index, 1);
+      this.dummyTasks.splice(index, 1);
     }
     return of(void 0);
   }
 
-  createTask(task: Partial<Task>): Observable<Task> {
-    const newTask: Task = {
-      id: this.tasks.length + 1,
-      projectId: task.projectId || 0,
-      title: task.title || "",
-      description: task.description || "",
-      status: task.status || "TODO",
-      priority: task.priority || "MEDIUM",
-      dueDate: task.dueDate || new Date(),
-      progress: task.progress || 0,
-      assignee: task.assignee,
-    };
-
-    this.tasks.push(newTask);
-    console.log("Yeni görev eklendi:", newTask);
-    return of(newTask);
+  getProjectTasks(projectId: string): Observable<Task[]> {
+    return this.getTasks().pipe(
+      map((tasks) => tasks.filter((task) => task.assignee.id === projectId))
+    );
   }
-
-  updateTaskStatus(
-    taskId: number,
-    status: "TODO" | "IN_PROGRESS" | "DONE"
-  ): Observable<Task> {
-    const task = this.tasks.find((t) => t.id === taskId);
-    if (task) {
-      task.status = status;
-      return of(task);
-    }
-    throw new Error("Task not found");
-  }
-
-  // ... diğer metodlar aynı
 }

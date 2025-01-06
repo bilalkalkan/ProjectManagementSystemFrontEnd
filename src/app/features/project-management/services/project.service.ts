@@ -8,7 +8,7 @@ import { Project } from "../../../core/models/project.model";
 export class ProjectService {
   private projects: Project[] = [
     {
-      id: 1,
+      id: "1",
       title: "E-ticaret Platformu",
       description: "Online alışveriş platformunun geliştirilmesi",
       status: "ACTIVE",
@@ -22,11 +22,11 @@ export class ProjectService {
     return of(this.projects);
   }
 
-  getProject(id: number): Observable<Project> {
+  getProject(id: string): Observable<Project> {
     return of(this.projects.find((p) => p.id === id)!);
   }
 
-  updateProjectStatus(id: number, status: string): Observable<void> {
+  updateProjectStatus(id: string, status: string): Observable<void> {
     const project = this.projects.find((p) => p.id === id);
     if (project) {
       project.status = status as any;
@@ -34,7 +34,7 @@ export class ProjectService {
     return of(void 0);
   }
 
-  updateProject(id: number, updates: Partial<Project>): Observable<Project> {
+  updateProject(id: string, updates: Partial<Project>): Observable<Project> {
     const index = this.projects.findIndex((p) => p.id === id);
     if (index !== -1) {
       this.projects[index] = { ...this.projects[index], ...updates };
@@ -45,7 +45,7 @@ export class ProjectService {
 
   createProject(project: Partial<Project>): Observable<Project> {
     const newProject: Project = {
-      id: this.projects.length + 1,
+      id: (this.projects.length + 1).toString(),
       title: project.title || "",
       description: project.description || "",
       status: "ACTIVE",
@@ -57,7 +57,7 @@ export class ProjectService {
     return of(newProject);
   }
 
-  addMember(projectId: number, memberId: number): Observable<void> {
+  addMember(projectId: string, memberId: number): Observable<void> {
     const project = this.projects.find((p) => p.id === projectId);
     if (project && !project.members.includes(memberId)) {
       project.members.push(memberId);
@@ -65,7 +65,7 @@ export class ProjectService {
     return of(void 0);
   }
 
-  removeMember(projectId: number, memberId: number): Observable<void> {
+  removeMember(projectId: string, memberId: number): Observable<void> {
     const project = this.projects.find((p) => p.id === projectId);
     if (project) {
       project.members = project.members.filter((id) => id !== memberId);

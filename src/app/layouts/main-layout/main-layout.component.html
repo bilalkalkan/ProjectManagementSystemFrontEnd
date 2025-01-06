@@ -1,0 +1,183 @@
+<mat-toolbar color="primary">
+  <div class="navbar-brand">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="brand-logo">
+      <mat-icon class="logo-icon">timeline</mat-icon>
+      <span class="brand-name">TaskMaster</span>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a mat-button routerLink="/dashboard" routerLinkActive="active">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </a>
+    <a mat-button routerLink="/tasks" routerLinkActive="active">
+      <mat-icon>list</mat-icon>
+      Görevler
+    </a>
+    <a mat-button routerLink="/tasks/board" routerLinkActive="active">
+      <mat-icon>view_kanban</mat-icon>
+      Kanban
+    </a>
+    <a mat-button routerLink="/projects" routerLinkActive="active">
+      <mat-icon>folder</mat-icon>
+      Projeler
+    </a>
+  </div>
+
+  <div class="navbar-actions">
+    <!-- Bildirimler -->
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="notificationMenu"
+      class="notification-btn"
+    >
+      <mat-icon
+        [matBadge]="notifications.length"
+        [matBadgeHidden]="notifications.length === 0"
+        matBadgeColor="warn"
+      >
+        notifications
+      </mat-icon>
+    </button>
+
+    <!-- Kullanıcı menüsü -->
+    <div class="user-profile">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
+        <div class="user-avatar-wrapper">
+          <img
+            [src]="currentUser?.avatarUrl || 'assets/default-avatar.png'"
+            [alt]="currentUser?.username || 'Kullanıcı'"
+            class="user-avatar"
+          />
+          <div class="user-status" [class.online]="true"></div>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{
+            currentUser?.username || "Kullanıcı"
+          }}</span>
+          <span class="user-role">{{ currentUser?.role || "Üye" }}</span>
+        </div>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" [opened]="true">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon matListIcon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-label">Proje Yönetimi</div>
+      <a mat-list-item routerLink="/projects" routerLinkActive="active">
+        <mat-icon matListIcon>folder</mat-icon>
+        <span>Projeler</span>
+      </a>
+      <a mat-list-item routerLink="/tasks" routerLinkActive="active">
+        <mat-icon matListIcon>assignment</mat-icon>
+        <span>Görevler</span>
+      </a>
+      <a mat-list-item routerLink="/tasks/board" routerLinkActive="active">
+        <mat-icon matListIcon>view_kanban</mat-icon>
+        <span>Kanban Board</span>
+      </a>
+      <a mat-list-item routerLink="/tasks/gantt" routerLinkActive="active">
+        <mat-icon matListIcon>timeline</mat-icon>
+        <span>Gantt Chart</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-label">Ekip Yönetimi</div>
+      <a mat-list-item routerLink="/team" routerLinkActive="active">
+        <mat-icon matListIcon>group</mat-icon>
+        <span>Takım</span>
+      </a>
+      <a mat-list-item routerLink="/team/roles" routerLinkActive="active">
+        <mat-icon matListIcon>admin_panel_settings</mat-icon>
+        <span>Roller & İzinler</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-label">Planlama</div>
+      <a mat-list-item routerLink="/calendar" routerLinkActive="active">
+        <mat-icon matListIcon>calendar_today</mat-icon>
+        <span>Takvim</span>
+      </a>
+      <a mat-list-item routerLink="/meetings" routerLinkActive="active">
+        <mat-icon matListIcon>video_camera_front</mat-icon>
+        <span>Toplantılar</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-label">Raporlar & Analiz</div>
+      <a mat-list-item routerLink="/reports/overview" routerLinkActive="active">
+        <mat-icon matListIcon>insights</mat-icon>
+        <span>Genel Bakış</span>
+      </a>
+      <a
+        mat-list-item
+        routerLink="/reports/performance"
+        routerLinkActive="active"
+      >
+        <mat-icon matListIcon>speed</mat-icon>
+        <span>Performans</span>
+      </a>
+      <a mat-list-item routerLink="/reports/time" routerLinkActive="active">
+        <mat-icon matListIcon>schedule</mat-icon>
+        <span>Zaman Takibi</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-label">Ayarlar</div>
+      <a mat-list-item routerLink="/settings" routerLinkActive="active">
+        <mat-icon matListIcon>settings</mat-icon>
+        <span>Genel Ayarlar</span>
+      </a>
+      <a mat-list-item routerLink="/profile" routerLinkActive="active">
+        <mat-icon matListIcon>person</mat-icon>
+        <span>Profil</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Bildirim menüsü -->
+<mat-menu #notificationMenu="matMenu" class="notification-menu">
+  <div class="notification-header">
+    <h3>Bildirimler</h3>
+    <button mat-button color="primary" (click)="markAllNotificationsAsRead()">
+      Tümünü Okundu İşaretle
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="notification-list">
+    <button mat-menu-item *ngFor="let notification of notifications">
+      <mat-icon [color]="notification.color">{{ notification.icon }}</mat-icon>
+      <span>{{ notification.message }}</span>
+    </button>
+  </div>
+</mat-menu>
+
+<!-- Kullanıcı menüsü -->
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item routerLink="/profile">
+    <mat-icon>person</mat-icon>
+    <span>Profilim</span>
+  </button>
+  <button mat-menu-item routerLink="/settings">
+    <mat-icon>settings</mat-icon>
+    <span>Ayarlar</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Çıkış Yap</span>
+  </button>
+</mat-menu>

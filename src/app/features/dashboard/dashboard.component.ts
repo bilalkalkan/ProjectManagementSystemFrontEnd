@@ -20,7 +20,6 @@ import { AvatarService } from "../../core/services/avatar.service";
     MatCardModule,
     MatIconModule,
     MatListModule,
-    TimeAgoPipe,
     MatListItemLine,
     MatListItemMeta,
     MatMenuModule,
@@ -58,7 +57,6 @@ import { AvatarService } from "../../core/services/avatar.service";
             </div>
           </div>
         </mat-card>
-
 
         <mat-card class="summary-card">
           <div class="card-icon success">

@@ -2,94 +2,49 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "../../../../core/services/auth.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-login",
-  template: `
-    <div class="login-container">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Giriş Yap</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline">
-              <mat-label>E-posta</mat-label>
-              <input matInput formControlName="email" type="email" />
-              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-                E-posta zorunludur
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Şifre</mat-label>
-              <input matInput formControlName="password" type="password" />
-              <mat-error
-                *ngIf="loginForm.get('password')?.hasError('required')"
-              >
-                Şifre zorunludur
-              </mat-error>
-            </mat-form-field>
-
-            <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="!loginForm.valid"
-            >
-              Giriş Yap
-            </button>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [
-    `
-      .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      mat-card {
-        width: 100%;
-        max-width: 400px;
-        padding: 20px;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-    `,
-  ],
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
   standalone: false,
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  hidePassword = true;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required]],
+      rememberMe: [false],
     });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       const { email, password } = this.loginForm.value;
+
       this.authService.login(email, password).subscribe({
         next: () => {
           this.router.navigate(["/projects"]);
         },
         error: (error) => {
           console.error("Login error:", error);
-          // Burada hata mesajını gösterebiliriz
+          this.snackBar.open(
+            "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
+            "Kapat",
+            { duration: 5000 }
+          );
+          this.isLoading = false;
         },
       });
     }

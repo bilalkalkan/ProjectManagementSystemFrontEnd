@@ -1,115 +1,117 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskService, Task } from "../../services/task.service";
-import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
-import { MatCardModule } from "@angular/material/card";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @Component({
   selector: "app-task-list",
   template: `
     <div class="task-list-container">
-      <!-- Üst Toolbar -->
-      <mat-card class="toolbar-card">
-        <div class="toolbar-actions">
-          <button mat-raised-button color="primary" routerLink="new">
+      <div class="task-header">
+        <div class="task-title">
+          <h1>Görevler</h1>
+          <span class="task-count">{{ tasks.length }} görev</span>
+        </div>
+        <div class="header-actions">
+          <div class="view-actions">
+            <button
+              mat-button
+              [routerLink]="['/tasks']"
+              routerLinkActive="active"
+            >
+              <mat-icon>list</mat-icon>
+              Liste
+            </button>
+            <button
+              mat-button
+              [routerLink]="['/tasks/board']"
+              routerLinkActive="active"
+            >
+              <mat-icon>view_kanban</mat-icon>
+              Kanban
+            </button>
+            <button
+              mat-button
+              [routerLink]="['/tasks/gantt']"
+              routerLinkActive="active"
+            >
+              <mat-icon>timeline</mat-icon>
+              Gantt
+            </button>
+          </div>
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Görev Ara</mat-label>
+            <input matInput placeholder="Görev adı veya açıklama..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <button mat-flat-button color="primary" (click)="addNewTask()">
             <mat-icon>add</mat-icon>
             Yeni Görev
           </button>
-          <button mat-raised-button routerLink="board">
-            <mat-icon>dashboard</mat-icon>
-            Kanban Görünümü
-          </button>
         </div>
+      </div>
 
-        <!-- Filtreler -->
-        <div class="filters">
-          <mat-form-field appearance="outline">
-            <mat-label>Durum</mat-label>
-            <mat-select [(ngModel)]="filters.status">
-              <mat-option value="all">Tümü</mat-option>
-              <mat-option value="TODO">Yapılacak</mat-option>
-              <mat-option value="IN_PROGRESS">Devam Ediyor</mat-option>
-              <mat-option value="DONE">Tamamlandı</mat-option>
-            </mat-select>
-          </mat-form-field>
+      <mat-table [dataSource]="tasks" class="task-table">
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>Başlık</mat-header-cell>
+          <mat-cell *matCellDef="let task">{{ task.title }}</mat-cell>
+        </ng-container>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Öncelik</mat-label>
-            <mat-select [(ngModel)]="filters.priority">
-              <mat-option value="all">Tümü</mat-option>
-              <mat-option value="HIGH">Yüksek</mat-option>
-              <mat-option value="MEDIUM">Orta</mat-option>
-              <mat-option value="LOW">Düşük</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Durum</mat-header-cell>
+          <mat-cell *matCellDef="let task">
+            <mat-chip [color]="getStatusColor(task.status)">
+              {{ task.status }}
+            </mat-chip>
+          </mat-cell>
+        </ng-container>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Ara</mat-label>
-            <input
-              matInput
-              [(ngModel)]="filters.search"
-              placeholder="Görev ara..."
-            />
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </div>
-      </mat-card>
+        <!-- Priority Column -->
+        <ng-container matColumnDef="priority">
+          <mat-header-cell *matHeaderCellDef>Öncelik</mat-header-cell>
+          <mat-cell *matCellDef="let task">
+            <mat-icon [color]="getPriorityColor(task.priority)">
+              {{ getPriorityIcon(task.priority) }}
+            </mat-icon>
+            {{ task.priority }}
+          </mat-cell>
+        </ng-container>
 
-      <!-- Görev Listesi -->
-      <div class="task-grid">
-        <mat-card *ngFor="let task of filteredTasks" class="task-card">
-          <div class="task-header">
-            <div [class]="'priority-badge ' + task.priority.toLowerCase()">
-              {{ task.priority }}
-            </div>
-            <button mat-icon-button [matMenuTriggerFor]="taskMenu">
+        <!-- Assignee Column -->
+        <ng-container matColumnDef="assignee">
+          <mat-header-cell *matHeaderCellDef>Atanan</mat-header-cell>
+          <mat-cell *matCellDef="let task">{{ task.assignee }}</mat-cell>
+        </ng-container>
+
+        <!-- Due Date Column -->
+        <ng-container matColumnDef="dueDate">
+          <mat-header-cell *matHeaderCellDef>Bitiş Tarihi</mat-header-cell>
+          <mat-cell *matCellDef="let task">{{ task.dueDate | date }}</mat-cell>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>İşlemler</mat-header-cell>
+          <mat-cell *matCellDef="let task">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
               <mat-icon>more_vert</mat-icon>
             </button>
-            <mat-menu #taskMenu="matMenu">
-              <button mat-menu-item [routerLink]="[task.id]">
-                <mat-icon>visibility</mat-icon>
-                <span>Detaylar</span>
-              </button>
-              <button mat-menu-item [routerLink]="[task.id, 'edit']">
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="editTask(task)">
                 <mat-icon>edit</mat-icon>
                 <span>Düzenle</span>
               </button>
-              <button mat-menu-item (click)="deleteTask(task.id)">
+              <button mat-menu-item (click)="deleteTask(task)">
                 <mat-icon color="warn">delete</mat-icon>
                 <span>Sil</span>
               </button>
             </mat-menu>
-          </div>
+          </mat-cell>
+        </ng-container>
 
-          <h3>{{ task.title }}</h3>
-          <p>{{ task.description }}</p>
-
-          <div class="task-meta">
-            <span class="due-date">
-              <mat-icon>event</mat-icon>
-              {{ task.dueDate | date }}
-            </span>
-            <span class="assignee" *ngIf="task.assignee">
-              <img [src]="task.assignee.avatar" [alt]="task.assignee.name" />
-              {{ task.assignee.name }}
-            </span>
-          </div>
-
-          <mat-progress-bar
-            *ngIf="task.status === 'IN_PROGRESS'"
-            mode="determinate"
-            [value]="task.progress"
-          ></mat-progress-bar>
-        </mat-card>
-      </div>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
     </div>
   `,
   styles: [
@@ -118,113 +120,77 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         padding: 24px;
       }
 
-      .toolbar-card {
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 24px;
-        padding: 16px;
       }
 
-      .toolbar-actions {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-
-      .filters {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-
-      .task-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
-      }
-
-      .task-card {
-        .task-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-
-        .priority-badge {
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 12px;
+      .task-title {
+        h1 {
+          margin: 0;
+          font-size: 28px;
           font-weight: 500;
         }
-
-        .priority-badge.high {
-          background: #ffebee;
-          color: #c62828;
+        .task-count {
+          color: #666;
+          font-size: 14px;
         }
-        .priority-badge.medium {
-          background: #fff3e0;
-          color: #ef6c00;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .view-actions {
+        display: flex;
+        gap: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
+        padding: 4px;
+
+        button.active {
+          background: rgba(0, 0, 0, 0.04);
         }
-        .priority-badge.low {
-          background: #e8f5e9;
-          color: #2e7d32;
+      }
+
+      .search-field {
+        width: 300px;
+      }
+
+      .task-table {
+        width: 100%;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .mat-column-title {
+          flex: 2;
         }
 
-        h3 {
-          margin: 0 0 8px 0;
-        }
-
-        p {
-          color: rgba(0, 0, 0, 0.6);
-          margin: 0 0 16px 0;
-        }
-
-        .task-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-          font-size: 0.9rem;
-          color: rgba(0, 0, 0, 0.6);
-
-          .due-date,
-          .assignee {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-          }
-
-          img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-          }
+        .mat-column-actions {
+          width: 80px;
+          justify-content: flex-end;
         }
       }
     `,
   ],
-  standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatMenuModule,
-    MatProgressBarModule,
-  ],
+  standalone: false,
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
-  filteredTasks: Task[] = [];
-  filters = {
-    status: "all",
-    priority: "all",
-    search: "",
-  };
+  displayedColumns = [
+    "title",
+    "status",
+    "priority",
+    "assignee",
+    "dueDate",
+    "actions",
+  ];
 
   constructor(private taskService: TaskService) {}
 
@@ -235,33 +201,63 @@ export class TaskListComponent implements OnInit {
   loadTasks() {
     this.taskService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
-      this.applyFilters();
     });
   }
 
-  applyFilters() {
-    this.filteredTasks = this.tasks.filter((task) => {
-      const matchesStatus =
-        this.filters.status === "all" || task.status === this.filters.status;
-      const matchesPriority =
-        this.filters.priority === "all" ||
-        task.priority === this.filters.priority;
-      const matchesSearch =
-        !this.filters.search ||
-        task.title.toLowerCase().includes(this.filters.search.toLowerCase()) ||
-        task.description
-          .toLowerCase()
-          .includes(this.filters.search.toLowerCase());
-
-      return matchesStatus && matchesPriority && matchesSearch;
-    });
-  }
-
-  deleteTask(id: number) {
-    if (confirm("Bu görevi silmek istediğinizden emin misiniz?")) {
-      this.taskService.deleteTask(id).subscribe(() => {
-        this.loadTasks();
-      });
+  getStatusColor(status: string): string {
+    switch (status) {
+      case "TODO":
+        return "primary";
+      case "IN_PROGRESS":
+        return "accent";
+      case "DONE":
+        return "warn";
+      default:
+        return "";
     }
+  }
+
+  getPriorityColor(priority: string): string {
+    switch (priority) {
+      case "HIGH":
+        return "warn";
+      case "MEDIUM":
+        return "accent";
+      case "LOW":
+        return "primary";
+      default:
+        return "";
+    }
+  }
+
+  getPriorityIcon(priority: string): string {
+    switch (priority) {
+      case "HIGH":
+        return "arrow_upward";
+      case "MEDIUM":
+        return "remove";
+      case "LOW":
+        return "arrow_downward";
+      default:
+        return "";
+    }
+  }
+
+  addNewTask() {
+    // TODO: Implement add task dialog
+  }
+
+  editTask(task: Task) {
+    // TODO: Implement edit task dialog
+  }
+
+  deleteTask(task: Task) {
+    // TODO: Implement delete confirmation dialog
+  }
+
+  updateStatus(task: Task, status: "TODO" | "IN_PROGRESS" | "DONE") {
+    this.taskService.updateTask({ ...task, status }).subscribe(() => {
+      this.loadTasks();
+    });
   }
 }

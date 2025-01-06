@@ -1,7 +1,7 @@
 import { User } from "./user.model";
 
 export interface Project {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: "ACTIVE" | "COMPLETED" | "ON_HOLD";

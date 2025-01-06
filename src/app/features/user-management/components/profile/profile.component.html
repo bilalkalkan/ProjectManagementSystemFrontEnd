@@ -1,0 +1,105 @@
+<div class="profile-container">
+  <mat-card>
+    <mat-card-header>
+      <div class="profile-header">
+        <h1>Profil Bilgileri</h1>
+        <p>Hesap bilgilerinizi buradan güncelleyebilirsiniz</p>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="profile-content">
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <img
+              [src]="currentUser?.avatarUrl || 'assets/default-avatar.png'"
+              alt="Profil"
+              class="profile-avatar"
+            />
+            <button
+              mat-mini-fab
+              color="primary"
+              class="change-avatar-btn"
+              (click)="fileInput.click()"
+            >
+              <mat-icon>photo_camera</mat-icon>
+            </button>
+          </div>
+          <input
+            #fileInput
+            type="file"
+            hidden
+            accept="image/*"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Ad Soyad</mat-label>
+              <input matInput formControlName="name" />
+              <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+                Ad soyad zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Kullanıcı Adı</mat-label>
+              <input matInput formControlName="username" />
+              <mat-error
+                *ngIf="profileForm.get('username')?.hasError('required')"
+              >
+                Kullanıcı adı zorunludur
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>E-posta</mat-label>
+              <input matInput formControlName="email" type="email" />
+              <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+                E-posta zorunludur
+              </mat-error>
+              <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                Geçerli bir e-posta adresi giriniz
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefon</mat-label>
+              <input matInput formControlName="phone" />
+              <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Hakkımda</mat-label>
+            <textarea
+              matInput
+              formControlName="bio"
+              rows="4"
+              placeholder="Kendinizi kısaca tanıtın..."
+            ></textarea>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="resetForm()">
+              Vazgeç
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="!profileForm.valid || !profileForm.dirty"
+            >
+              <mat-icon>save</mat-icon>
+              Değişiklikleri Kaydet
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

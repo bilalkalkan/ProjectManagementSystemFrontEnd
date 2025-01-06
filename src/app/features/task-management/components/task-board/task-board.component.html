@@ -1,0 +1,120 @@
+<div class="board-container">
+  <div class="board-header">
+    <h1>Kanban Tahtası</h1>
+    <button mat-flat-button color="primary" (click)="addNewTask()">
+      <mat-icon>add</mat-icon>
+      Yeni Görev
+    </button>
+  </div>
+
+  <div class="board-content">
+    <!-- TODO List -->
+    <div class="board-column">
+      <div class="column-header todo">
+        <h2>Bekleyen</h2>
+        <span class="task-count">{{ todoTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [cdkDropListData]="todoTasks"
+        [cdkDropListConnectedTo]="[inProgressList, doneList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        <mat-card *ngFor="let task of todoTasks" cdkDrag class="task-card">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+            <mat-card-subtitle>{{ task.assignee }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <div class="task-meta">
+              <span class="priority {{ task.priority.toLowerCase() }}">
+                {{ task.priority }}
+              </span>
+              <span class="due-date">
+                <mat-icon>event</mat-icon>
+                {{ task.dueDate | date }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- In Progress List -->
+    <div class="board-column">
+      <div class="column-header in-progress">
+        <h2>Devam Eden</h2>
+        <span class="task-count">{{ inProgressTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        #inProgressList="cdkDropList"
+        [cdkDropListData]="inProgressTasks"
+        [cdkDropListConnectedTo]="[todoList, doneList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        <mat-card
+          *ngFor="let task of inProgressTasks"
+          cdkDrag
+          class="task-card"
+        >
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+            <mat-card-subtitle>{{ task.assignee }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <div class="task-meta">
+              <span class="priority {{ task.priority.toLowerCase() }}">
+                {{ task.priority }}
+              </span>
+              <span class="due-date">
+                <mat-icon>event</mat-icon>
+                {{ task.dueDate | date }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Done List -->
+    <div class="board-column">
+      <div class="column-header done">
+        <h2>Tamamlanan</h2>
+        <span class="task-count">{{ doneTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="doneTasks"
+        [cdkDropListConnectedTo]="[todoList, inProgressList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        <mat-card *ngFor="let task of doneTasks" cdkDrag class="task-card">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+            <mat-card-subtitle>{{ task.assignee }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ task.description }}</p>
+            <div class="task-meta">
+              <span class="priority {{ task.priority.toLowerCase() }}">
+                {{ task.priority }}
+              </span>
+              <span class="due-date">
+                <mat-icon>event</mat-icon>
+                {{ task.dueDate | date }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
