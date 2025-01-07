@@ -1,0 +1,160 @@
+<div class="project-form-container">
+  <mat-card>
+    <div class="form-header">
+      <div class="header-content">
+        <button mat-icon-button routerLink="/projects" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="title-section">
+          <h1>{{ isEditMode ? "Projeyi Düzenle" : "Yeni Proje" }}</h1>
+          <p>
+            {{
+              isEditMode
+                ? "Proje bilgilerini güncelleyin"
+                : "Yeni bir proje oluşturun"
+            }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <mat-card-content>
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+        <div class="form-section">
+          <h2>Temel Bilgiler</h2>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Proje Adı</mat-label>
+            <mat-icon matPrefix>title</mat-icon>
+            <input
+              matInput
+              formControlName="title"
+              placeholder="Örn: E-ticaret Platformu"
+            />
+            <mat-error *ngIf="projectForm.get('title')?.hasError('required')">
+              Proje adı zorunludur
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Açıklama</mat-label>
+            <mat-icon matPrefix>description</mat-icon>
+            <textarea
+              matInput
+              formControlName="description"
+              rows="4"
+              placeholder="Projenin amacını ve kapsamını açıklayın..."
+            ></textarea>
+            <mat-error
+              *ngIf="projectForm.get('description')?.hasError('required')"
+            >
+              Proje açıklaması zorunludur
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <h2>Proje Detayları</h2>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Bitiş Tarihi</mat-label>
+              <mat-icon matPrefix>event</mat-icon>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="dueDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error
+                *ngIf="projectForm.get('dueDate')?.hasError('required')"
+              >
+                Bitiş tarihi zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Öncelik</mat-label>
+              <mat-icon matPrefix>flag</mat-icon>
+              <mat-select formControlName="priority">
+                <mat-option value="LOW">Düşük</mat-option>
+                <mat-option value="MEDIUM">Orta</mat-option>
+                <mat-option value="HIGH">Yüksek</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Proje Üyeleri</mat-label>
+            <mat-icon matPrefix>group</mat-icon>
+            <mat-select formControlName="members" multiple>
+              <mat-select-trigger>
+                {{ getSelectedMembersText() }}
+              </mat-select-trigger>
+              <mat-option
+                *ngFor="let member of availableMembers"
+                [value]="member.id"
+              >
+                <div class="member-option">
+                  <img
+                    [src]="member.avatarUrl"
+                    [alt]="member.name"
+                    class="member-avatar"
+                  />
+                  <div class="member-info">
+                    <span class="member-name">{{ member.name }}</span>
+                    <span class="member-role">{{ member.role }}</span>
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div
+            class="selected-members"
+            *ngIf="projectForm.get('members')?.value?.length"
+          >
+            <div
+              class="member-chip"
+              *ngFor="let memberId of projectForm.get('members')?.value"
+            >
+              <img
+                [src]="getMemberAvatar(memberId)"
+                [alt]="getMemberName(memberId)"
+              />
+              <span>{{ getMemberName(memberId) }}</span>
+              <button mat-icon-button (click)="removeMember(memberId)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            routerLink="/projects"
+            class="cancel-button"
+          >
+            <mat-icon>close</mat-icon>
+            İptal
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="!projectForm.valid || projectForm.pristine"
+          >
+            <mat-icon>{{ isEditMode ? "save" : "add" }}</mat-icon>
+            {{ isEditMode ? "Güncelle" : "Oluştur" }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,178 @@
+<div class="projects-container">
+  <!-- Üst Başlık Kartı -->
+  <mat-card class="header-card">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>Projeler</h1>
+        <p>Tüm projelerinizi buradan yönetebilirsiniz</p>
+      </div>
+      <div class="actions">
+        <button mat-flat-button color="primary" [routerLink]="['new']">
+          <mat-icon>add</mat-icon>
+          Yeni Proje
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Filtreler ve Arama -->
+  <div class="filters-section">
+    <div class="search-box">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [(ngModel)]="searchText" placeholder="Proje ara..." />
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="searchText"
+          (click)="searchText = ''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="status-filters">
+      <div class="filter-label">Durum:</div>
+      <mat-button-toggle-group [(ngModel)]="selectedStatus">
+        <mat-button-toggle value="all">
+          <mat-icon>list</mat-icon>
+          Tümü
+        </mat-button-toggle>
+        <mat-button-toggle value="ACTIVE">
+          <mat-icon>play_circle</mat-icon>
+          Aktif
+        </mat-button-toggle>
+        <mat-button-toggle value="ON_HOLD">
+          <mat-icon>pause_circle</mat-icon>
+          Beklemede
+        </mat-button-toggle>
+        <mat-button-toggle value="COMPLETED">
+          <mat-icon>check_circle</mat-icon>
+          Tamamlandı
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+
+  <!-- Projeler Grid -->
+  <div class="projects-grid">
+    <mat-card class="project-card" *ngFor="let project of filteredProjects">
+      <div class="card-banner" [class]="project.status.toLowerCase()">
+        <div class="status-badge" [class]="project.status.toLowerCase()">
+          {{ getStatusText(project.status) }}
+        </div>
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="more-button">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+
+      <mat-card-content>
+        <div class="project-header">
+          <h2 class="project-title">{{ project.title }}</h2>
+          <p class="project-description">{{ project.description }}</p>
+        </div>
+
+        <div class="project-stats">
+          <div class="stat-item">
+            <div class="stat-icon">
+              <mat-icon>task_alt</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">12</span>
+              <span class="stat-label">Görevler</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <mat-icon>group</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ project.members.length }}</span>
+              <span class="stat-label">Üyeler</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <mat-icon>event</mat-icon>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ getDaysLeft(project.dueDate) }}</span>
+              <span class="stat-label">Gün Kaldı</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-team">
+          <div class="team-avatars">
+            <div class="avatar-stack">
+              <img
+                *ngFor="let memberId of project.members.slice(0, 3)"
+                [src]="getMemberAvatar(memberId)"
+                [alt]="'Üye ' + memberId"
+                class="member-avatar"
+              />
+              <div *ngIf="project.members.length > 3" class="more-members">
+                +{{ project.members.length - 3 }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-label">
+            <span>İlerleme</span>
+            <span [class]="getProgressClass(project.progress)"
+              >%{{ project.progress }}</span
+            >
+          </div>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="project.progress"
+            [class]="getProgressClass(project.progress)"
+          ></mat-progress-bar>
+        </div>
+
+        <div class="card-actions">
+          <button mat-stroked-button [routerLink]="[project.id, 'board']">
+            <mat-icon>dashboard</mat-icon>
+            Görev Tahtası
+          </button>
+          <button mat-flat-button color="primary" [routerLink]="[project.id]">
+            <mat-icon>visibility</mat-icon>
+            Görüntüle
+          </button>
+        </div>
+      </mat-card-content>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="[project.id]">
+          <mat-icon>visibility</mat-icon>
+          <span>Görüntüle</span>
+        </button>
+        <button mat-menu-item [routerLink]="[project.id, 'edit']">
+          <mat-icon>edit</mat-icon>
+          <span>Düzenle</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item [routerLink]="[project.id, 'board']">
+          <mat-icon>dashboard</mat-icon>
+          <span>Görev Tahtası</span>
+        </button>
+        <button mat-menu-item [routerLink]="[project.id, 'tasks']">
+          <mat-icon>list</mat-icon>
+          <span>Görevler</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button
+          mat-menu-item
+          (click)="deleteProject(project)"
+          class="delete-action"
+        >
+          <mat-icon color="warn">delete</mat-icon>
+          <span class="text-warn">Sil</span>
+        </button>
+      </mat-menu>
+    </mat-card>
+  </div>
+</div>

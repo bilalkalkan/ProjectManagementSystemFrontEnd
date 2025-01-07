@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Project } from "../../../core/models/project.model";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
 })
 export class ProjectService {
-  private projects: Project[] = [
+  private apiUrl = "api"; // veya environment.apiUrl
+  public projects: Project[] = [
     {
       id: "1",
       title: "E-ticaret Platformu",
@@ -15,8 +17,12 @@ export class ProjectService {
       dueDate: new Date("2024-06-30"),
       progress: 35,
       members: [1, 2], // Ahmet ve Ayşe
+      completedTasks: 5,
+      totalTasks: 12,
     },
   ];
+
+  constructor(private http: HttpClient) {}
 
   getProjects(): Observable<Project[]> {
     return of(this.projects);
@@ -52,6 +58,8 @@ export class ProjectService {
       dueDate: project.dueDate || new Date(),
       progress: 0,
       members: [],
+      completedTasks: 0,
+      totalTasks: 0,
     };
     this.projects.push(newProject);
     return of(newProject);
@@ -71,5 +79,9 @@ export class ProjectService {
       project.members = project.members.filter((id) => id !== memberId);
     }
     return of(void 0);
+  }
+
+  deleteProject(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/projects/${id}`);
   }
 }

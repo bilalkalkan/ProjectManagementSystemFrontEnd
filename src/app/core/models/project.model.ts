@@ -4,8 +4,10 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  status: "ACTIVE" | "COMPLETED" | "ON_HOLD";
+  status: string;
   dueDate: Date;
   progress: number;
   members: number[];
+  completedTasks?: number;
+  totalTasks?: number;
 }

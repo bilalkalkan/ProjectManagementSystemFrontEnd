@@ -2,115 +2,71 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ProjectService } from "../../services/project.service";
-import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
-import { MatCardModule } from "@angular/material/card";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatButtonModule } from "@angular/material/button";
+import { AvatarService } from "../../../../core/services/avatar.service";
 
 @Component({
   selector: "app-project-form",
-  template: `
-    <div class="project-form-container">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Yeni Proje Oluştur</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline">
-              <mat-label>Proje Adı</mat-label>
-              <input matInput formControlName="title" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Açıklama</mat-label>
-              <textarea
-                matInput
-                formControlName="description"
-                rows="4"
-              ></textarea>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Bitiş Tarihi</mat-label>
-              <input
-                matInput
-                [matDatepicker]="picker"
-                formControlName="dueDate"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <div class="actions">
-              <button mat-raised-button type="button" routerLink="/projects">
-                İptal
-              </button>
-              <button
-                mat-raised-button
-                color="primary"
-                type="submit"
-                [disabled]="!projectForm.valid"
-              >
-                Oluştur
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [
-    `
-      .project-form-container {
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .actions {
-        display: flex;
-        gap: 16px;
-        justify-content: flex-end;
-      }
-    `,
-  ],
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatButtonModule,
-  ],
+  templateUrl: "./project-form.component.html",
+  styleUrls: ["./project-form.component.scss"],
+  standalone: false,
 })
 export class ProjectFormComponent implements OnInit {
   projectForm: FormGroup;
   isEditMode = false;
   projectId?: string;
 
+  availableMembers = [
+    {
+      id: 1,
+      name: "Ali Yılmaz",
+      role: "Frontend Developer",
+      avatarUrl: this.avatarService.getAvatarUrl(1),
+    },
+    {
+      id: 2,
+      name: "Ayşe Demir",
+      role: "Backend Developer",
+      avatarUrl: this.avatarService.getAvatarUrl(2),
+    },
+    {
+      id: 3,
+      name: "Mehmet Kaya",
+      role: "UI/UX Designer",
+      avatarUrl: this.avatarService.getAvatarUrl(3),
+    },
+    {
+      id: 4,
+      name: "Zeynep Şahin",
+      role: "Project Manager",
+      avatarUrl: this.avatarService.getAvatarUrl(4),
+    },
+    {
+      id: 5,
+      name: "Can Özkan",
+      role: "DevOps Engineer",
+      avatarUrl: this.avatarService.getAvatarUrl(5),
+    },
+    {
+      id: 6,
+      name: "Elif Yıldız",
+      role: "QA Engineer",
+      avatarUrl: this.avatarService.getAvatarUrl(6),
+    },
+  ];
+
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private avatarService: AvatarService
   ) {
     this.projectForm = this.fb.group({
       title: ["", Validators.required],
       description: ["", Validators.required],
       dueDate: [null, Validators.required],
+      priority: ["MEDIUM"],
+      members: [[]], // Üye seçimi için yeni form kontrolü
     });
   }
 
@@ -139,30 +95,55 @@ export class ProjectFormComponent implements OnInit {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      if (this.projectId) {
-        this.projectService.updateProject(
-          this.projectId,
-          this.projectForm.value
-        );
+      if (this.isEditMode && this.projectId) {
+        // Güncelleme işlemi
+        this.projectService
+          .updateProject(this.projectId, this.projectForm.value)
+          .subscribe({
+            next: () => {
+              this.router.navigate(["/projects"]);
+            },
+            error: (error) => {
+              console.error("Proje güncellenirken hata oluştu:", error);
+            },
+          });
       } else {
-        this.projectService.createProject(this.projectForm.value);
-      }
-
-      this.projectService
-        .updateProject(this.projectId!, this.projectForm.value)
-        .subscribe({
+        // Yeni proje oluşturma işlemi
+        this.projectService.createProject(this.projectForm.value).subscribe({
           next: () => {
             this.router.navigate(["/projects"]);
           },
           error: (error) => {
-            console.error(
-              `Proje ${
-                this.isEditMode ? "güncellenirken" : "oluşturulurken"
-              } hata oluştu:`,
-              error
-            );
+            console.error("Proje oluşturulurken hata oluştu:", error);
           },
         });
+      }
     }
+  }
+
+  getSelectedMembersText(): string {
+    const selectedMembers = this.projectForm.get("members")?.value || [];
+    if (selectedMembers.length === 0) return "Üye seçin";
+    if (selectedMembers.length === 1) {
+      return this.getMemberName(selectedMembers[0]);
+    }
+    return `${this.getMemberName(selectedMembers[0])} ve ${
+      selectedMembers.length - 1
+    } diğer`;
+  }
+
+  getMemberName(id: number): string {
+    return this.availableMembers.find((m) => m.id === id)?.name || "";
+  }
+
+  getMemberAvatar(id: number): string {
+    return this.availableMembers.find((m) => m.id === id)?.avatarUrl || "";
+  }
+
+  removeMember(memberId: number) {
+    const members = this.projectForm.get("members")?.value || [];
+    this.projectForm.patchValue({
+      members: members.filter((id: number) => id !== memberId),
+    });
   }
 }

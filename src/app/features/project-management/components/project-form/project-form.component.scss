@@ -1,0 +1,202 @@
+.project-form-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  mat-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .form-header {
+    background: linear-gradient(135deg, #3f51b5, #2196f3);
+    color: white;
+    padding: 24px;
+    margin: -16px -16px 24px;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .back-button {
+        color: white;
+      }
+
+      .title-section {
+        h1 {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        p {
+          margin: 4px 0 0;
+          opacity: 0.8;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 0 24px 24px;
+  }
+
+  .form-section {
+    margin-bottom: 32px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.87);
+      margin: 0 0 16px;
+    }
+
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 16px;
+
+      ::ng-deep {
+        .mat-form-field-prefix {
+          margin-right: 12px;
+          color: rgba(0, 0, 0, 0.54);
+        }
+
+        .mat-form-field-outline {
+          background: #f8fafc;
+        }
+      }
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+    button {
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 24px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    .cancel-button {
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .project-form-container {
+    padding: 16px;
+
+    .form-header {
+      padding: 16px;
+    }
+
+    mat-card-content {
+      padding: 0 16px 16px;
+    }
+
+    .form-actions {
+      flex-direction: column-reverse;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.member-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+
+  .member-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .member-info {
+    display: flex;
+    flex-direction: column;
+
+    .member-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .member-role {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+.selected-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+
+  .member-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 4px 4px;
+    background: #f1f5f9;
+    border-radius: 20px;
+
+    img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    span {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+
+    button {
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    &:hover {
+      background: #e2e8f0;
+    }
+  }
+}
