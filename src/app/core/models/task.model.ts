@@ -1,11 +1,14 @@
 import { User } from "./user.model";
 
 export interface Task {
-  id: number;
-  projectId: number;
+  id: string;
+  projectId: string;
   title: string;
   description: string;
-  assignedTo: User;
-  dueDate: Date;
   status: "TODO" | "IN_PROGRESS" | "DONE";
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  dueDate: Date;
+  assigneeId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

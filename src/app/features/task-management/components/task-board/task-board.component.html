@@ -1,10 +1,36 @@
 <div class="board-container">
   <div class="board-header">
-    <h1>Kanban Tahtası</h1>
-    <button mat-flat-button color="primary" (click)="addNewTask()">
-      <mat-icon>add</mat-icon>
-      Yeni Görev
-    </button>
+    <div class="header-content">
+      <div class="title-section">
+        <h1>{{ projectTitle }}</h1>
+        <p>Görev Tahtası</p>
+      </div>
+      <div class="actions">
+        <button mat-flat-button color="primary" (click)="addNewTask()">
+          <mat-icon>add</mat-icon>
+          Yeni Görev
+        </button>
+        <button mat-icon-button [routerLink]="['/projects', projectId]">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="project-stats">
+      <div class="stat-item">
+        <span class="stat-value">{{
+          todoTasks.length + inProgressTasks.length + doneTasks.length
+        }}</span>
+        <span class="stat-label">Toplam Görev</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{ doneTasks.length }}</span>
+        <span class="stat-label">Tamamlanan</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{ inProgressTasks.length }}</span>
+        <span class="stat-label">Devam Eden</span>
+      </div>
+    </div>
   </div>
 
   <div class="board-content">

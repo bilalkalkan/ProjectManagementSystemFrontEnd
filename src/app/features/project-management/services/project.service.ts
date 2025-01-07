@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import { Project } from "../../../core/models/project.model";
 import { HttpClient } from "@angular/common/http";
 
@@ -16,9 +16,37 @@ export class ProjectService {
       status: "ACTIVE",
       dueDate: new Date("2024-06-30"),
       progress: 35,
-      members: [1, 2], // Ahmet ve Ayşe
+      members: [1, 2],
       completedTasks: 5,
       totalTasks: 12,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "2",
+      title: "Mobil Uygulama",
+      description: "iOS ve Android için mobil uygulama geliştirme",
+      status: "ACTIVE",
+      dueDate: new Date("2024-07-15"),
+      progress: 20,
+      members: [1, 3],
+      completedTasks: 3,
+      totalTasks: 15,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "3",
+      title: "CRM Sistemi",
+      description: "Müşteri ilişkileri yönetim sistemi",
+      status: "PLANNED",
+      dueDate: new Date("2024-08-30"),
+      progress: 0,
+      members: [2, 3],
+      completedTasks: 0,
+      totalTasks: 8,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   ];
 
@@ -29,7 +57,11 @@ export class ProjectService {
   }
 
   getProject(id: string): Observable<Project> {
-    return of(this.projects.find((p) => p.id === id)!);
+    const project = this.projects.find((p) => p.id === id);
+    if (!project) {
+      return throwError(() => new Error("Project not found"));
+    }
+    return of(project);
   }
 
   updateProjectStatus(id: string, status: string): Observable<void> {
@@ -60,6 +92,8 @@ export class ProjectService {
       members: [],
       completedTasks: 0,
       totalTasks: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.projects.push(newProject);
     return of(newProject);

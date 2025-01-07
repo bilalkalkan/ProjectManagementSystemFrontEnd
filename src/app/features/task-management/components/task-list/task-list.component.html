@@ -1,0 +1,120 @@
+<div class="tasks-container">
+  <div class="header-card">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ pageDescription }}</p>
+      </div>
+      <div class="actions">
+        <button mat-flat-button color="primary" (click)="addNewTask()">
+          <mat-icon>add</mat-icon>
+          Yeni Görev
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-table [dataSource]="tasks" class="tasks-table">
+    <!-- Başlık Kolonu -->
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef>Görev</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <div class="task-info">
+          <span class="task-title">{{ task.title }}</span>
+          <span class="task-description">{{ task.description }}</span>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Proje Kolonu -->
+    <ng-container matColumnDef="project">
+      <mat-header-cell *matHeaderCellDef>Proje</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <a [routerLink]="['/projects', task.projectId]">
+          {{ getProjectTitle(task.projectId) }}
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Atanan Kişi Kolonu -->
+    <ng-container matColumnDef="assignee">
+      <mat-header-cell *matHeaderCellDef>Atanan</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <div class="assignee-info">
+          <div
+            class="avatar"
+            *ngIf="!task.assignee.avatar"
+            [matTooltip]="task.assignee.name"
+          >
+            {{ getAvatarFallback(task.assignee.name) }}
+          </div>
+          <img
+            *ngIf="task.assignee.avatar"
+            [src]="task.assignee.avatar"
+            [alt]="task.assignee.name"
+            [matTooltip]="task.assignee.name"
+            class="avatar"
+            (error)="handleImageError($event)"
+          />
+          {{ task.assignee.name }}
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Öncelik Kolonu -->
+    <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef>Öncelik</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <mat-chip [class]="task.priority.toLowerCase()">
+          <mat-icon>{{ getPriorityIcon(task.priority) }}</mat-icon>
+          {{ task.priority }}
+        </mat-chip>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Durum Kolonu -->
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef>Durum</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <mat-chip [class]="task.status.toLowerCase()">
+          <mat-icon>{{ getStatusIcon(task.status) }}</mat-icon>
+          {{ getStatusText(task.status) }}
+        </mat-chip>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Tarih Kolonu -->
+    <ng-container matColumnDef="dueDate">
+      <mat-header-cell *matHeaderCellDef>Bitiş Tarihi</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <div class="due-date" [class.overdue]="isOverdue(task.dueDate)">
+          <mat-icon>event</mat-icon>
+          {{ task.dueDate | date }}
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <!-- İşlemler Kolonu -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>İşlemler</mat-header-cell>
+      <mat-cell *matCellDef="let task">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editTask(task)">
+            <mat-icon>edit</mat-icon>
+            <span>Düzenle</span>
+          </button>
+          <button mat-menu-item (click)="deleteTask(task)">
+            <mat-icon>delete</mat-icon>
+            <span>Sil</span>
+          </button>
+        </mat-menu>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>

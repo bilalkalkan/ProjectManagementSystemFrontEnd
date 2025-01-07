@@ -1,0 +1,65 @@
+// Açık tema değişkenleri
+:root {
+  --background-primary: #ffffff;
+  --background-secondary: #f8f9fa;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: rgba(0, 0, 0, 0.12);
+  --surface-color: #ffffff;
+  --hover-color: #f5f5f5;
+  --divider-color: rgba(0, 0, 0, 0.08);
+}
+
+// Koyu tema değişkenleri
+.dark-theme {
+  --background-primary: #121212;
+  --background-secondary: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --surface-color: #242424;
+  --hover-color: #2c2c2c;
+  --divider-color: rgba(255, 255, 255, 0.08);
+
+  // Material override'lar
+  .mat-toolbar {
+    background: var(--surface-color);
+    color: var(--text-primary);
+  }
+
+  .mat-menu-panel {
+    background: var(--surface-color);
+    color: var(--text-primary);
+  }
+
+  .notification-menu-panel {
+    .notification-header {
+      background: var(--background-secondary);
+    }
+
+    .notification-item {
+      &:hover {
+        background: var(--hover-color);
+      }
+
+      &.unread {
+        background: rgba(33, 150, 243, 0.15);
+
+        &:hover {
+          background: rgba(33, 150, 243, 0.25);
+        }
+      }
+    }
+  }
+
+  // Diğer component'ler için koyu tema stilleri
+  .mat-card {
+    background: var(--surface-color);
+    color: var(--text-primary);
+  }
+
+  .mat-button,
+  .mat-icon-button {
+    color: var(--text-primary);
+  }
+}

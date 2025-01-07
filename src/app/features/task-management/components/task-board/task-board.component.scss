@@ -5,15 +5,55 @@
 }
 
 .board-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
   margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-  h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 500;
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .title-section {
+      h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      p {
+        margin: 4px 0 0;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .project-stats {
+    display: flex;
+    gap: 24px;
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+
+      .stat-value {
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
   }
 }
 

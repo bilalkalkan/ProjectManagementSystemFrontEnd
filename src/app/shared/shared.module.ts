@@ -19,6 +19,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TimeAgoPipe } from "./pipes/time-ago.pipe";
 
 @NgModule({
+  declarations: [TimeAgoPipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -38,9 +39,9 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     MatBadgeModule,
     MatProgressBarModule,
     MatTooltipModule,
-    TimeAgoPipe,
   ],
   exports: [
+    TimeAgoPipe,
     ReactiveFormsModule,
     FormsModule,
     MatCardModule,
@@ -58,7 +59,6 @@ import { TimeAgoPipe } from "./pipes/time-ago.pipe";
     MatBadgeModule,
     MatProgressBarModule,
     MatTooltipModule,
-    TimeAgoPipe,
   ],
 })
 export class SharedModule {}

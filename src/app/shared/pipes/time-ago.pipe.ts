@@ -2,29 +2,31 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
   name: "timeAgo",
-  standalone: true,
+  standalone: false,
 })
 export class TimeAgoPipe implements PipeTransform {
-  transform(value: Date | string): string {
-    const date = new Date(value);
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  transform(value: Date): string {
+    const seconds = Math.floor(
+      (new Date().getTime() - new Date(value).getTime()) / 1000
+    );
 
-    if (seconds < 60) return "az önce";
+    if (seconds < 60) return "Az önce";
 
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes} dakika önce`;
+    const intervals = {
+      yıl: 31536000,
+      ay: 2592000,
+      hafta: 604800,
+      gün: 86400,
+      saat: 3600,
+      dakika: 60,
+    };
 
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} saat önce`;
-
-    const days = Math.floor(hours / 24);
-    if (days < 30) return `${days} gün önce`;
-
-    const months = Math.floor(days / 30);
-    if (months < 12) return `${months} ay önce`;
-
-    const years = Math.floor(months / 12);
-    return `${years} yıl önce`;
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+      const interval = Math.floor(seconds / secondsInUnit);
+      if (interval >= 1) {
+        return `${interval} ${unit} önce`;
+      }
+    }
+    return "Az önce";
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskService, Task } from "../../services/task.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-task-gantt",
@@ -173,6 +174,7 @@ import { TaskService, Task } from "../../services/task.service";
   standalone: false,
 })
 export class TaskGanttComponent implements OnInit {
+  projectId: string = "";
   tasks: Task[] = [];
   months = [
     "Ocak",
@@ -189,16 +191,22 @@ export class TaskGanttComponent implements OnInit {
     "Aralık",
   ];
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    this.projectId = this.route.snapshot.params["projectId"];
     this.loadTasks();
   }
 
   loadTasks() {
-    this.taskService.getTasks().subscribe((tasks) => {
-      this.tasks = tasks;
-    });
+    this.taskService
+      .getTasksByProject(this.projectId)
+      .subscribe((tasks: Task[]) => {
+        this.tasks = tasks;
+      });
   }
 
   getTaskStart(task: Task): number {

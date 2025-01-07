@@ -2,6 +2,9 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { MainLayoutComponent } from "./layouts/main-layout/main-layout.component";
 import { AuthGuard } from "./core/guards/auth.guard";
+import { TaskBoardComponent } from "./features/task-management/components/task-board/task-board.component";
+import { TaskListComponent } from "./features/task-management/components/task-list/task-list.component";
+import { TaskGanttComponent } from "./features/task-management/components/task-gantt/task-gantt.component";
 
 const routes: Routes = [
   {
@@ -22,6 +25,24 @@ const routes: Routes = [
           import(
             "./features/project-management/project-management.module"
           ).then((m) => m.ProjectManagementModule),
+      },
+      {
+        path: "projects/:projectId",
+        children: [
+          { path: "", redirectTo: "board", pathMatch: "full" },
+          {
+            path: "board",
+            component: TaskBoardComponent,
+          },
+          {
+            path: "tasks",
+            component: TaskListComponent,
+          },
+          {
+            path: "gantt",
+            component: TaskGanttComponent,
+          },
+        ],
       },
       {
         path: "tasks",
