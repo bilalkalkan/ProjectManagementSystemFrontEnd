@@ -21,7 +21,7 @@ interface Notification {
   standalone: false,
 })
 export class MainLayoutComponent {
-  @ViewChild("sidenav") sidenav!: MatSidenav;
+  @ViewChild("sidenav", { static: true }) sidenav!: MatSidenav;
   @ViewChild("notificationMenu") notificationMenu!: MatMenu;
   @ViewChild("userMenu") userMenu!: MatMenu;
 

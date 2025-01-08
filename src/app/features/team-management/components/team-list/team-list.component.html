@@ -1,0 +1,89 @@
+<div class="team-container">
+  <mat-card>
+    <div class="header">
+      <div class="title">
+        <h1>Ekip Üyeleri</h1>
+        <p>Tüm ekip üyelerini buradan yönetebilirsiniz</p>
+      </div>
+      <button mat-raised-button color="primary" (click)="openMemberForm()">
+        <mat-icon>person_add</mat-icon>
+        Yeni Üye Ekle
+      </button>
+    </div>
+
+    <mat-table [dataSource]="teamMembers" class="team-table">
+      <!-- Avatar Kolonu -->
+      <ng-container matColumnDef="avatar">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <img
+            [src]="member.avatarUrl"
+            [alt]="member.name"
+            class="member-avatar"
+          />
+        </mat-cell>
+      </ng-container>
+
+      <!-- İsim Kolonu -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>İsim</mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <div class="member-info">
+            <span class="member-name">{{ member.name }}</span>
+            <span class="member-email">{{ member.email }}</span>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Rol Kolonu -->
+      <ng-container matColumnDef="role">
+        <mat-header-cell *matHeaderCellDef>Rol</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.role }}</mat-cell>
+      </ng-container>
+
+      <!-- Departman Kolonu -->
+      <ng-container matColumnDef="department">
+        <mat-header-cell *matHeaderCellDef>Departman</mat-header-cell>
+        <mat-cell *matCellDef="let member">{{ member.department }}</mat-cell>
+      </ng-container>
+
+      <!-- Durum Kolonu -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Durum</mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <mat-chip-listbox>
+            <mat-chip
+              [color]="member.status === 'active' ? 'primary' : 'warn'"
+              selected
+            >
+              {{ member.status === "active" ? "Aktif" : "Pasif" }}
+            </mat-chip>
+          </mat-chip-listbox>
+        </mat-cell>
+      </ng-container>
+
+      <!--İşlemler Kolonu -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openMemberForm(member)">
+              <mat-icon>edit</mat-icon>
+              <span>Düzenle</span>
+            </button>
+            <button mat-menu-item (click)="deleteMember(member.id)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span class="text-warn">Sil</span>
+            </button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </mat-card>
+</div>

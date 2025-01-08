@@ -13,22 +13,17 @@ export class ThemeService {
     const savedTheme = localStorage.getItem("darkMode");
     if (savedTheme) {
       this.setDarkMode(savedTheme === "true");
-    } else {
-      // Sistem temasını kontrol et
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      this.setDarkMode(prefersDark);
     }
   }
 
   setDarkMode(isDark: boolean) {
     this.darkMode.next(isDark);
     localStorage.setItem("darkMode", isDark.toString());
+
     if (isDark) {
-      document.body.classList.add("dark-theme");
+      document.documentElement.classList.add("dark-theme");
     } else {
-      document.body.classList.remove("dark-theme");
+      document.documentElement.classList.remove("dark-theme");
     }
   }
 

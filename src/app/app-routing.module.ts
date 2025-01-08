@@ -52,6 +52,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: "team",
+        loadChildren: () =>
+          import("./features/team-management/team-management.module").then(
+            (m) => m.TeamManagementModule
+          ),
+      },
+      {
         path: "",
         redirectTo: "dashboard",
         pathMatch: "full",

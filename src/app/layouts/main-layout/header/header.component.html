@@ -1,6 +1,12 @@
 <mat-toolbar class="header">
   <div class="left-section">
-    <!-- Logo ve diğer sol kısım içeriği -->
+    <button mat-icon-button (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="brand">
+      <mat-icon class="brand-icon">timeline</mat-icon>
+      <span class="brand-name">TaskMaster</span>
+    </div>
   </div>
 
   <div class="right-section">
@@ -13,73 +19,84 @@
       <mat-icon>{{ isDarkMode ? "light_mode" : "dark_mode" }}</mat-icon>
     </button>
 
-    <!-- Bildirim butonu -->
+    <!-- Bildirimler -->
     <button
       mat-icon-button
       [matMenuTriggerFor]="notificationMenu"
+      [matBadge]="unreadCount"
+      [matBadgeHidden]="unreadCount === 0"
+      matBadgeColor="warn"
       class="notification-btn"
     >
-      <mat-icon
-        [matBadge]="unreadCount"
-        [matBadgeHidden]="unreadCount === 0"
-        matBadgeColor="warn"
-      >
-        notifications
-      </mat-icon>
+      <mat-icon>notifications</mat-icon>
     </button>
 
-    <!-- Bildirim menüsü -->
-    <mat-menu
-      #notificationMenu="matMenu"
-      class="notification-menu"
-      panelClass="notification-menu-panel"
-    >
-      <div class="notification-header">
-        <h3>Bildirimler</h3>
-        <button mat-button color="primary">Tümünü Okundu İşaretle</button>
-      </div>
+    <!-- Kullanıcı menüsü -->
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+      <img
+        [src]="user?.avatarUrl || 'assets/default-avatar.png'"
+        [alt]="user?.username"
+        class="user-avatar"
+      />
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  </div>
 
-      <mat-divider></mat-divider>
-
-      <div class="notification-list">
-        <div
-          *ngFor="let notification of notifications"
-          class="notification-item"
-          [class.unread]="!notification.isRead"
-          (click)="onNotificationClick(notification)"
-        >
-          <mat-icon [class]="notification.type">
-            {{ getNotificationIcon(notification.type) }}
-          </mat-icon>
-          <div class="notification-content">
-            <div class="notification-title">{{ notification.title }}</div>
-            <div class="notification-message">{{ notification.message }}</div>
-            <div class="notification-time">
-              {{ notification.timestamp | timeAgo }}
-            </div>
+  <!-- Bildirim Menüsü -->
+  <mat-menu #notificationMenu="matMenu" class="notification-menu">
+    <div class="menu-header">
+      <h3>Bildirimler</h3>
+      <button mat-button color="primary" (click)="markAllAsRead()">
+        Tümünü Okundu İşaretle
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="notification-list">
+      <div
+        *ngFor="let notification of notifications"
+        class="notification-item"
+        [class.unread]="!notification.isRead"
+        (click)="onNotificationClick(notification)"
+      >
+        <mat-icon [class]="notification.type">
+          {{ getNotificationIcon(notification.type) }}
+        </mat-icon>
+        <div class="notification-content">
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-time">
+            {{ notification.timestamp | timeAgo }}
           </div>
         </div>
       </div>
-    </mat-menu>
+    </div>
+  </mat-menu>
 
-    <!-- Kullanıcı menüsü -->
-    <button mat-icon-button [matMenuTriggerFor]="userMenu">
-      <mat-icon>account_circle</mat-icon>
+  <!-- Kullanıcı Menüsü -->
+  <mat-menu #userMenu="matMenu">
+    <div class="user-info-header">
+      <img
+        [src]="user?.avatarUrl || 'assets/default-avatar.png'"
+        [alt]="user?.username"
+        class="user-avatar"
+      />
+      <div class="user-details">
+        <div class="user-name">{{ user?.username }}</div>
+        <div class="user-email">{{ user?.email }}</div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>Profilim</span>
     </button>
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>person</mat-icon>
-        <span>Profilim</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>settings</mat-icon>
-        <span>Ayarlar</span>
-      </button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-        <span>Çıkış Yap</span>
-      </button>
-    </mat-menu>
-  </div>
+    <button mat-menu-item routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>Ayarlar</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Çıkış Yap</span>
+    </button>
+  </mat-menu>
 </mat-toolbar>

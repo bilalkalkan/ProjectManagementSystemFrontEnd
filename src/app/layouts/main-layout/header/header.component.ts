@@ -1,9 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-  NotificationService,
-  Notification,
-} from "../../../core/services/notification.service";
+import { AuthService } from "../../../core/services/auth.service";
+import { NotificationService } from "../../../core/services/notification.service";
 import { ThemeService } from "../../../core/services/theme.service";
 
 @Component({
@@ -13,28 +11,28 @@ import { ThemeService } from "../../../core/services/theme.service";
   standalone: false,
 })
 export class HeaderComponent implements OnInit {
-  notifications: Notification[] = [];
+  @Output() toggleSidenavEvent = new EventEmitter<void>();
+  notifications: any[] = [];
   unreadCount = 0;
   isDarkMode = false;
+  user = this.authService.currentUserValue;
 
   constructor(
+    private router: Router,
+    private authService: AuthService,
     private notificationService: NotificationService,
-    private themeService: ThemeService,
-    private router: Router
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
-    this.notificationService.getNotifications().subscribe((notifications) => {
-      this.notifications = notifications;
-    });
-
-    this.notificationService.getUnreadCount().subscribe((count) => {
-      this.unreadCount = count;
-    });
-
+    this.loadNotifications();
     this.themeService.darkMode$.subscribe(
       (isDark) => (this.isDarkMode = isDark)
     );
+  }
+
+  toggleTheme() {
+    this.themeService.toggleDarkMode();
   }
 
   getNotificationIcon(type: string): string {
@@ -50,7 +48,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  onNotificationClick(notification: Notification) {
+  onNotificationClick(notification: any) {
     this.notificationService.markAsRead(notification.id);
     if (notification.link) {
       this.router.navigate([notification.link]);
@@ -62,7 +60,23 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(["/auth/login"]);
   }
 
-  toggleTheme() {
-    this.themeService.toggleDarkMode();
+  loadNotifications() {
+    this.notificationService.getNotifications().subscribe((notifications) => {
+      this.notifications = notifications;
+    });
+
+    this.notificationService.getUnreadCount().subscribe((count) => {
+      this.unreadCount = count;
+    });
+  }
+
+  markAllAsRead() {
+    this.notifications.forEach((notification) => {
+      this.notificationService.markAsRead(notification.id);
+    });
+  }
+
+  toggleSidenav() {
+    this.toggleSidenavEvent.emit();
   }
 }

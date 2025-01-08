@@ -11,22 +11,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatDividerModule } from "@angular/material/divider";
+import { MainLayoutModule } from "./main-layout/main-layout.module";
 
 @NgModule({
-  declarations: [MainLayoutComponent],
-  imports: [
-    CommonModule,
-    RouterModule,
-    SharedModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatDividerModule,
-  ],
-  exports: [MainLayoutComponent],
+  declarations: [],
+  imports: [CommonModule, MainLayoutModule],
 })
 export class LayoutsModule {}

@@ -1,17 +1,36 @@
-// Açık tema değişkenleri
-:root {
-  --background-primary: #ffffff;
-  --background-secondary: #f8f9fa;
-  --text-primary: rgba(0, 0, 0, 0.87);
-  --text-secondary: rgba(0, 0, 0, 0.6);
-  --border-color: rgba(0, 0, 0, 0.12);
-  --surface-color: #ffffff;
-  --hover-color: #f5f5f5;
-  --divider-color: rgba(0, 0, 0, 0.08);
-}
+@use "@angular/material" as mat;
 
-// Koyu tema değişkenleri
+// Açık tema paleti
+$light-primary: mat.define-palette(mat.$indigo-palette);
+$light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $light-primary,
+      accent: $light-accent,
+    ),
+  )
+);
+
+// Koyu tema paleti
+$dark-primary: mat.define-palette(mat.$blue-grey-palette);
+$dark-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $dark-primary,
+      accent: $dark-accent,
+    ),
+  )
+);
+
+// Varsayılan olarak açık temayı uygula
+@include mat.all-component-themes($light-theme);
+
+// Koyu tema class'ı eklendiğinde koyu temayı uygula
 .dark-theme {
+  @include mat.all-component-colors($dark-theme);
+
   --background-primary: #121212;
   --background-secondary: #1e1e1e;
   --text-primary: rgba(255, 255, 255, 0.87);
@@ -19,47 +38,11 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --surface-color: #242424;
   --hover-color: #2c2c2c;
-  --divider-color: rgba(255, 255, 255, 0.08);
+}
 
-  // Material override'lar
-  .mat-toolbar {
-    background: var(--surface-color);
-    color: var(--text-primary);
-  }
-
-  .mat-menu-panel {
-    background: var(--surface-color);
-    color: var(--text-primary);
-  }
-
-  .notification-menu-panel {
-    .notification-header {
-      background: var(--background-secondary);
-    }
-
-    .notification-item {
-      &:hover {
-        background: var(--hover-color);
-      }
-
-      &.unread {
-        background: rgba(33, 150, 243, 0.15);
-
-        &:hover {
-          background: rgba(33, 150, 243, 0.25);
-        }
-      }
-    }
-  }
-
-  // Diğer component'ler için koyu tema stilleri
-  .mat-card {
-    background: var(--surface-color);
-    color: var(--text-primary);
-  }
-
-  .mat-button,
-  .mat-icon-button {
-    color: var(--text-primary);
-  }
+body {
+  margin: 0;
+  background-color: var(--background-primary, #ffffff);
+  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+  transition: background-color 0.3s ease;
 }

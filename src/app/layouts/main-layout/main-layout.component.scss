@@ -124,6 +124,8 @@ mat-toolbar {
 
 mat-sidenav-container {
   height: calc(100vh - 64px);
+  z-index: 1;
+  position: relative;
 }
 
 mat-sidenav {
@@ -131,6 +133,10 @@ mat-sidenav {
   background: #f8f9fa;
   border-right: none;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 64px;
+  left: 0;
+  bottom: 0;
 
   .nav-section-label {
     padding: 16px 16px 8px;
@@ -167,6 +173,14 @@ mat-sidenav {
     margin-right: 12px;
     color: rgba(0, 0, 0, 0.54);
   }
+}
+
+mat-sidenav-content {
+  margin-left: 260px !important;
+  min-height: calc(100vh - 64px);
+  background: var(--background-primary);
+  position: relative;
+  z-index: 0;
 }
 
 .notification-menu {
@@ -216,5 +230,13 @@ mat-sidenav {
         margin-right: 0;
       }
     }
+  }
+
+  mat-sidenav {
+    position: fixed;
+  }
+
+  mat-sidenav-content {
+    margin-left: 0 !important;
   }
 }
