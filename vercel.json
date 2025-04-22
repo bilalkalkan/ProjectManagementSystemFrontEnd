@@ -1,9 +1,11 @@
 {
   "builds": [
     {
-      "src": "angular.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "dist/proje-yonetim-sistemi" }
+      "config": {
+        "distDir": "dist/proje-yonetim-sistemi"
+      }
     }
   ]
 }
