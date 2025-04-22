@@ -1,28 +1,27 @@
-name: Deploy Angular App to Vercel (Preprod)
+name: Deploy to Vercel
 
 on:
   push:
     branches:
-      - preprod
+      - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: "16"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Build Angular App
-        run: npm run build -- --configuration production
+      - name: Build the project
+        run: npm run build --if-present
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
@@ -30,4 +29,4 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: "--prod"
+          vercel-branch: main
