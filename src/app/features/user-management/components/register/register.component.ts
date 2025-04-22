@@ -13,6 +13,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class RegisterComponent {
   registerForm: FormGroup;
   hidePassword = true;
+  hideConfirmPassword = true;
   isLoading = false;
 
   constructor(
@@ -23,26 +24,60 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.fb.group(
       {
-        name: ["", Validators.required],
-        username: ["", Validators.required],
+        firstName: ["", [Validators.required, Validators.minLength(2)]],
+        lastName: ["", [Validators.required, Validators.minLength(2)]],
         email: ["", [Validators.required, Validators.email]],
-        password: ["", [Validators.required, Validators.minLength(6)]],
+        password: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z0-9]).*$/), // En az bir küçük harf ve bir büyük harf veya rakam
+          ],
+        ],
         confirmPassword: ["", Validators.required],
       },
-      { validator: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator }
     );
   }
 
-  passwordMatchValidator(g: FormGroup) {
-    return g.get("password")?.value === g.get("confirmPassword")?.value
-      ? null
-      : { passwordMismatch: true };
+  passwordMatchValidator(formGroup: FormGroup) {
+    const passwordControl = formGroup.get("password");
+    const confirmPasswordControl = formGroup.get("confirmPassword");
+
+    if (!passwordControl || !confirmPasswordControl) {
+      return null;
+    }
+
+    if (
+      confirmPasswordControl.errors &&
+      !confirmPasswordControl.errors["passwordMismatch"]
+    ) {
+      return null;
+    }
+
+    if (passwordControl.value !== confirmPasswordControl.value) {
+      confirmPasswordControl.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      confirmPasswordControl.setErrors(null);
+      return null;
+    }
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-      this.authService.register(this.registerForm.value).subscribe({
+
+      const registerData = {
+        firstName: this.registerForm.value.firstName,
+        lastName: this.registerForm.value.lastName,
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.password,
+        confirmPassword: this.registerForm.value.confirmPassword,
+      };
+
+      this.authService.register(registerData).subscribe({
         next: () => {
           this.snackBar.open("Kayıt başarılı! Giriş yapabilirsiniz.", "Tamam", {
             duration: 3000,
@@ -51,10 +86,13 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.snackBar.open(
-            error?.error?.message || "Kayıt sırasında bir hata oluştu",
+            error.message || "Kayıt sırasında bir hata oluştu",
             "Tamam",
             { duration: 3000 }
           );
+          this.isLoading = false;
+        },
+        complete: () => {
           this.isLoading = false;
         },
       });

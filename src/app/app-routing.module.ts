@@ -59,6 +59,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: "profile",
+        loadChildren: () =>
+          import("./features/user-management/user-management.module").then(
+            (m) => m.UserManagementModule
+          ),
+      },
+      {
         path: "",
         redirectTo: "dashboard",
         pathMatch: "full",

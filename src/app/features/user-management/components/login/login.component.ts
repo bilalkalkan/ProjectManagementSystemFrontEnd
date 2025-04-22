@@ -35,15 +35,20 @@ export class LoginComponent {
 
       this.authService.login(email, password).subscribe({
         next: () => {
-          this.router.navigate(["/projects"]);
+          this.router.navigate(["/dashboard"]);
+          this.snackBar.open("Giriş başarılı", "Tamam", { duration: 3000 });
         },
         error: (error) => {
           console.error("Login error:", error);
           this.snackBar.open(
-            "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
+            error.message ||
+              "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
             "Kapat",
             { duration: 5000 }
           );
+          this.isLoading = false;
+        },
+        complete: () => {
           this.isLoading = false;
         },
       });

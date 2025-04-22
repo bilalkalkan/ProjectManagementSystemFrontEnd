@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ProjectService } from "../../services/project.service";
 import { AvatarService } from "../../../../core/services/avatar.service";
+import { Project, ProjectStatus } from "../../../../core/models/project.model";
 
 @Component({
   selector: "app-project-form",
@@ -79,10 +80,12 @@ export class ProjectFormComponent implements OnInit {
         next: (project) => {
           if (project) {
             this.projectForm.patchValue({
-              title: project.title,
+              title: project.title || project.name,
               description: project.description,
-              dueDate: project.dueDate,
+              dueDate: project.dueDate || project.endDate,
+              members: project.members || [],
             });
+            console.log("Proje yüklendi:", project);
           }
         },
         error: (error) => {
@@ -95,12 +98,26 @@ export class ProjectFormComponent implements OnInit {
 
   onSubmit() {
     if (this.projectForm.valid) {
+      // Form değerlerini API formatına dönüştür
+      const formData = this.projectForm.value;
+      const projectData = {
+        name: formData.title,
+        description: formData.description,
+        startDate: new Date(), // Varsayılan olarak bugünü kullan
+        endDate: formData.dueDate,
+        status: ProjectStatus.InProgress, // Varsayılan olarak aktif
+        members: formData.members || [],
+      };
+
+      console.log("Gönderilecek veri:", projectData);
+
       if (this.isEditMode && this.projectId) {
         // Güncelleme işlemi
         this.projectService
-          .updateProject(this.projectId, this.projectForm.value)
+          .updateProject(this.projectId, projectData)
           .subscribe({
-            next: () => {
+            next: (updatedProject) => {
+              console.log("Proje güncellendi:", updatedProject);
               this.router.navigate(["/projects"]);
             },
             error: (error) => {
@@ -109,8 +126,9 @@ export class ProjectFormComponent implements OnInit {
           });
       } else {
         // Yeni proje oluşturma işlemi
-        this.projectService.createProject(this.projectForm.value).subscribe({
-          next: () => {
+        this.projectService.createProject(projectData).subscribe({
+          next: (newProject) => {
+            console.log("Yeni proje oluşturuldu:", newProject);
             this.router.navigate(["/projects"]);
           },
           error: (error) => {

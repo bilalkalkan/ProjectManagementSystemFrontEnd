@@ -152,7 +152,7 @@
               </span>
               <span class="team-size">
                 <mat-icon>group</mat-icon>
-                {{ project.members.length }}
+                {{ project.teamMembersCount || project.members?.length || 0 }}
               </span>
             </div>
           </div>

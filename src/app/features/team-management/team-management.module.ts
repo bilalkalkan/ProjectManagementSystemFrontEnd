@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { TeamListComponent } from "./components/team-list/team-list.component";
 import { MatCardModule } from "@angular/material/card";
 import { MatTableModule } from "@angular/material/table";
@@ -12,13 +13,22 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { TeamMemberFormComponent } from "./components/team-member-form/team-member-form.component";
+import { RoleManagementComponent } from "./components/role-management/role-management.component";
 import { TeamManagementRoutingModule } from "./team-management-routing.module";
 
 @NgModule({
-  declarations: [TeamListComponent, TeamMemberFormComponent],
+  declarations: [
+    TeamListComponent,
+    TeamMemberFormComponent,
+    RoleManagementComponent,
+  ],
   imports: [
     CommonModule,
+    FormsModule,
     SharedModule,
     MatCardModule,
     MatTableModule,
@@ -30,7 +40,14 @@ import { TeamManagementRoutingModule } from "./team-management-routing.module";
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatDividerModule,
+    MatTooltipModule,
+    MatSnackBarModule,
     TeamManagementRoutingModule,
   ],
 })
-export class TeamManagementModule {}
+export class TeamManagementModule {
+  constructor() {
+    console.log("TeamManagementModule yüklendi");
+  }
+}

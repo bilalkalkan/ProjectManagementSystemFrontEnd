@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "../../../core/services/auth.service";
 import { NotificationService } from "../../../core/services/notification.service";
 import { ThemeService } from "../../../core/services/theme.service";
+import { AvatarService } from "../../../core/services/avatar.service";
 
 @Component({
   selector: "app-header",
@@ -15,13 +16,14 @@ export class HeaderComponent implements OnInit {
   notifications: any[] = [];
   unreadCount = 0;
   isDarkMode = false;
-  user = this.authService.currentUserValue;
+  user: any = this.authService.currentUserValue;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private avatarService: AvatarService
   ) {}
 
   ngOnInit() {
@@ -29,6 +31,12 @@ export class HeaderComponent implements OnInit {
     this.themeService.darkMode$.subscribe(
       (isDark) => (this.isDarkMode = isDark)
     );
+
+    // Kullanıcı bilgilerini güncelle
+    this.authService.currentUser.subscribe((user) => {
+      this.user = user;
+      console.log("Header user:", this.user);
+    });
   }
 
   toggleTheme() {
@@ -56,7 +64,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    // TODO: Implement logout logic
+    this.authService.logout();
     this.router.navigate(["/auth/login"]);
   }
 
@@ -78,5 +86,18 @@ export class HeaderComponent implements OnInit {
 
   toggleSidenav() {
     this.toggleSidenavEvent.emit();
+  }
+
+  getAvatarUrl(): string {
+    if (this.user?.avatarUrl) {
+      return this.user.avatarUrl;
+    }
+
+    if (this.user?.id) {
+      return this.avatarService.getAvatarUrl(this.user.id);
+    }
+
+    // Default avatar
+    return "https://api.dicebear.com/7.x/avataaars/svg?seed=default";
   }
 }

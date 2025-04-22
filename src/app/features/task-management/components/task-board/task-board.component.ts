@@ -22,6 +22,62 @@ export class TaskBoardComponent implements OnInit {
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
 
+  // Filtreleme ve sıralama için değişkenler
+  statusFilter: string = "all";
+  priorityFilter: string = "all";
+
+  // Orijinal görev listeleri (filtreleme için)
+  allTodoTasks: Task[] = [];
+  allInProgressTasks: Task[] = [];
+  allDoneTasks: Task[] = [];
+
+  // Filtreleme metodları
+  applyFilters() {
+    // Durum filtresine göre görevleri filtrele
+    if (this.statusFilter === "all") {
+      // Tüm durumlar için öncelik filtresini uygula
+      this.todoTasks = this.filterByPriority(this.allTodoTasks);
+      this.inProgressTasks = this.filterByPriority(this.allInProgressTasks);
+      this.doneTasks = this.filterByPriority(this.allDoneTasks);
+    } else {
+      // Sadece seçili durumu göster ve öncelik filtresini uygula
+      this.todoTasks =
+        this.statusFilter === "TODO"
+          ? this.filterByPriority(this.allTodoTasks)
+          : [];
+      this.inProgressTasks =
+        this.statusFilter === "IN_PROGRESS"
+          ? this.filterByPriority(this.allInProgressTasks)
+          : [];
+      this.doneTasks =
+        this.statusFilter === "DONE"
+          ? this.filterByPriority(this.allDoneTasks)
+          : [];
+    }
+  }
+
+  filterByPriority(tasks: Task[]): Task[] {
+    if (this.priorityFilter === "all") {
+      return tasks;
+    }
+    return tasks.filter((task) => task.priority === this.priorityFilter);
+  }
+
+  resetFilters() {
+    this.statusFilter = "all";
+    this.priorityFilter = "all";
+    this.applyFilters();
+  }
+
+  openTaskDetails(task: Task) {
+    console.log("Görev detayları:", task);
+    // TODO: Görev detaylarını gösteren bir dialog aç
+    // Şimdilik sadece konsola yazdırıyoruz
+    alert(
+      `Görev: ${task.title}\nDurum: ${task.status}\nÖncelik: ${task.priority}\nAçıklama: ${task.description}`
+    );
+  }
+
   constructor(
     private taskService: TaskService,
     private route: ActivatedRoute,
@@ -30,15 +86,23 @@ export class TaskBoardComponent implements OnInit {
 
   ngOnInit() {
     this.projectId = this.route.snapshot.params["projectId"];
-    this.loadProjectDetails();
-    this.loadTasks();
+
+    if (this.projectId) {
+      // Belirli bir projenin görevlerini yükle
+      this.loadProjectDetails();
+      this.loadTasks();
+    } else {
+      // Tüm görevleri yükle
+      this.projectTitle = "Tüm Görevler";
+      this.loadAllTasks();
+    }
   }
 
   loadProjectDetails() {
     this.projectService.getProject(this.projectId).subscribe({
       next: (project: Project) => {
         if (project) {
-          this.projectTitle = project.title;
+          this.projectTitle = project.title || project.name || "Proje";
         } else {
           console.error("Project not found");
           // Opsiyonel: Kullanıcıyı projeler sayfasına yönlendir
@@ -53,11 +117,15 @@ export class TaskBoardComponent implements OnInit {
 
   loadTasks() {
     this.taskService.getTasksByProject(this.projectId).subscribe((tasks) => {
-      this.todoTasks = tasks.filter((task) => task.status === "TODO");
-      this.inProgressTasks = tasks.filter(
+      // Orijinal görev listelerini sakla
+      this.allTodoTasks = tasks.filter((task) => task.status === "TODO");
+      this.allInProgressTasks = tasks.filter(
         (task) => task.status === "IN_PROGRESS"
       );
-      this.doneTasks = tasks.filter((task) => task.status === "DONE");
+      this.allDoneTasks = tasks.filter((task) => task.status === "DONE");
+
+      // Filtreleri uygula
+      this.applyFilters();
     });
   }
 
@@ -103,7 +171,43 @@ export class TaskBoardComponent implements OnInit {
       .updateTaskStatus(task.projectId, task.id, newStatus)
       .subscribe(() => {
         // Güncelleme başarılı
-        this.loadTasks();
+        if (this.projectId) {
+          this.loadTasks();
+        } else {
+          this.loadAllTasks();
+        }
       });
+  }
+
+  loadAllTasks() {
+    // Önce tüm projeleri yükle
+    this.projectService.getProjects().subscribe((projects) => {
+      // Tüm görevleri sıfırla
+      this.allTodoTasks = [];
+      this.allInProgressTasks = [];
+      this.allDoneTasks = [];
+
+      // Her proje için görevleri yükle
+      projects.forEach((project) => {
+        this.taskService.getTasksByProject(project.id).subscribe((tasks) => {
+          // Görevleri durumlarına göre ayır
+          this.allTodoTasks = [
+            ...this.allTodoTasks,
+            ...tasks.filter((task) => task.status === "TODO"),
+          ];
+          this.allInProgressTasks = [
+            ...this.allInProgressTasks,
+            ...tasks.filter((task) => task.status === "IN_PROGRESS"),
+          ];
+          this.allDoneTasks = [
+            ...this.allDoneTasks,
+            ...tasks.filter((task) => task.status === "DONE"),
+          ];
+
+          // Filtreleri uygula
+          this.applyFilters();
+        });
+      });
+    });
   }
 }

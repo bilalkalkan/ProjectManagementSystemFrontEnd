@@ -11,22 +11,24 @@
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Ad Soyad</mat-label>
-            <input matInput formControlName="name" />
-            <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
-              Ad soyad zorunludur
+            <mat-label>Ad</mat-label>
+            <input matInput formControlName="firstName" />
+            <mat-error
+              *ngIf="registerForm.get('firstName')?.hasError('required')"
+            >
+              Ad zorunludur
             </mat-error>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Kullanıcı Adı</mat-label>
-            <input matInput formControlName="username" />
+            <mat-label>Soyad</mat-label>
+            <input matInput formControlName="lastName" />
             <mat-error
-              *ngIf="registerForm.get('username')?.hasError('required')"
+              *ngIf="registerForm.get('lastName')?.hasError('required')"
             >
-              Kullanıcı adı zorunludur
+              Soyad zorunludur
             </mat-error>
           </mat-form-field>
         </div>
@@ -62,6 +64,10 @@
                 hidePassword ? "visibility_off" : "visibility"
               }}</mat-icon>
             </button>
+            <mat-hint
+              >En az 6 karakter, bir küçük harf ve bir büyük harf veya rakam
+              içermelidir</mat-hint
+            >
             <mat-error
               *ngIf="registerForm.get('password')?.hasError('required')"
             >
@@ -72,6 +78,12 @@
             >
               Şifre en az 6 karakter olmalıdır
             </mat-error>
+            <mat-error
+              *ngIf="registerForm.get('password')?.hasError('pattern')"
+            >
+              Şifre en az bir küçük harf ve bir büyük harf veya rakam
+              içermelidir
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -80,9 +92,19 @@
             <mat-label>Şifre Tekrar</mat-label>
             <input
               matInput
-              [type]="hidePassword ? 'password' : 'text'"
+              [type]="hideConfirmPassword ? 'password' : 'text'"
               formControlName="confirmPassword"
             />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hideConfirmPassword = !hideConfirmPassword"
+            >
+              <mat-icon>{{
+                hideConfirmPassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
             <mat-error
               *ngIf="registerForm.get('confirmPassword')?.hasError('required')"
             >

@@ -19,6 +19,7 @@ import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
 import { LoggingInterceptor } from "./core/interceptors/logging.interceptor";
 import { LayoutsModule } from "./layouts/layouts.module";
+import { TeamManagementModule } from "./features/team-management/team-management.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { LayoutsModule } from "./layouts/layouts.module";
     CoreModule,
     SharedModule,
     LayoutsModule,
+    TeamManagementModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true },

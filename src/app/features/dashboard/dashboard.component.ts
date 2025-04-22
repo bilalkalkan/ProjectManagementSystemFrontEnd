@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ProjectService } from "../project-management/services/project.service";
 import { AvatarService } from "../../core/services/avatar.service";
-import { Project } from "../../core/models/project.model";
+import { Project, ProjectStatus } from "../../core/models/project.model";
 
 interface Activity {
   type: "create" | "update" | "delete" | "complete";
@@ -26,6 +26,8 @@ interface Task {
   standalone: false,
 })
 export class DashboardComponent implements OnInit {
+  // ProjectStatus enum'unu template'te kullanabilmek için
+  ProjectStatus = ProjectStatus;
   activeProjects: Project[] = [];
   recentActivities: Activity[] = [];
   upcomingTasks: Task[] = [];
@@ -43,7 +45,14 @@ export class DashboardComponent implements OnInit {
     // Projeleri yükle
     this.projectService.getProjects().subscribe({
       next: (projects) => {
-        this.activeProjects = projects.filter((p) => p.status === "ACTIVE");
+        this.activeProjects = projects.filter((p) => {
+          const status = p.status;
+          return typeof status === "number"
+            ? status === 1 // ProjectStatus.InProgress
+            : typeof status === "string"
+            ? status === "ACTIVE"
+            : status === ProjectStatus.InProgress;
+        });
       },
     });
 
@@ -108,16 +117,22 @@ export class DashboardComponent implements OnInit {
   }
 
   getTeamMembersCount(): number {
-    return new Set(this.activeProjects.flatMap((p) => p.members)).size;
+    // Üye sayısını hesapla (API'den gelen teamMembersCount veya members dizisini kullan)
+    return this.activeProjects.reduce((total, project) => {
+      return total + (project.teamMembersCount || project.members?.length || 0);
+    }, 0);
   }
 
   getRecentMembers() {
-    const allMembers = this.activeProjects.flatMap((p) => p.members);
-    const uniqueMembers = Array.from(new Set(allMembers));
-    return uniqueMembers.slice(0, 5).map((id) => ({
-      id,
-      name: `Üye ${id}`, // Gerçek isimler için üye servisi kullanılabilir
-    }));
+    // Üye bilgilerini dön
+    // API'den üye bilgisi gelene kadar varsayılan üyeler oluştur
+    return [
+      { id: 1, name: "Ali Yılmaz" },
+      { id: 2, name: "Ayşe Demir" },
+      { id: 3, name: "Mehmet Kaya" },
+      { id: 4, name: "Zeynep Çelik" },
+      { id: 5, name: "Can Yıldız" },
+    ];
   }
 
   getCompletionRate(): number {
@@ -158,13 +173,15 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getProgressClass(progress: number): string {
-    if (progress < 30) return "low";
-    if (progress < 70) return "medium";
+  getProgressClass(progress: number | undefined): string {
+    const progressValue = progress || 0;
+    if (progressValue < 30) return "low";
+    if (progressValue < 70) return "medium";
     return "high";
   }
 
-  getMemberAvatar(memberId: number): string {
+  getMemberAvatar(memberId: number | undefined): string {
+    if (!memberId) return "assets/images/avatars/default.png";
     return this.avatarService.getAvatarUrl(memberId);
   }
 }

@@ -3,29 +3,62 @@
 // Açık tema paleti
 $light-primary: mat.define-palette(mat.$indigo-palette);
 $light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$light-warn: mat.define-palette(mat.$red-palette);
 $light-theme: mat.define-light-theme(
   (
     color: (
       primary: $light-primary,
       accent: $light-accent,
+      warn: $light-warn,
     ),
+    typography: mat.define-typography-config(),
+    density: 0,
   )
 );
 
 // Koyu tema paleti
 $dark-primary: mat.define-palette(mat.$blue-grey-palette);
 $dark-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+$dark-warn: mat.define-palette(mat.$deep-orange-palette);
 $dark-theme: mat.define-dark-theme(
   (
     color: (
       primary: $dark-primary,
       accent: $dark-accent,
+      warn: $dark-warn,
     ),
+    typography: mat.define-typography-config(),
+    density: 0,
   )
 );
 
 // Varsayılan olarak açık temayı uygula
 @include mat.all-component-themes($light-theme);
+
+:root {
+  --primary-color: #3f51b5; /* Indigo */
+  --accent-color: #ff4081; /* Pink */
+  --warn-color: #f44336; /* Red */
+  --background-primary: #f5f5f5;
+  --background-secondary: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: rgba(0, 0, 0, 0.12);
+  --surface-color: #ffffff;
+  --hover-color: #f5f5f5;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  /* Material Design Renkleri */
+  --mat-primary-color: #3f51b5;
+  --mat-primary-lighter: #c5cae9;
+  --mat-primary-darker: #303f9f;
+  --mat-accent-color: #ff4081;
+  --mat-accent-lighter: #ff80ab;
+  --mat-accent-darker: #f50057;
+  --mat-warn-color: #f44336;
+  --mat-warn-lighter: #ffcdd2;
+  --mat-warn-darker: #d32f2f;
+}
 
 // Koyu tema class'ı eklendiğinde koyu temayı uygula
 .dark-theme {
@@ -40,9 +73,75 @@ $dark-theme: mat.define-dark-theme(
   --hover-color: #2c2c2c;
 }
 
+// Material Icons font
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 body {
   margin: 0;
-  background-color: var(--background-primary, #ffffff);
-  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+  background-color: #f5f5f5 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
   transition: background-color 0.3s ease;
+
+  --background-primary: #f5f5f5 !important;
+  --background-secondary: #ffffff !important;
+  --text-primary: rgba(0, 0, 0, 0.87) !important;
+  --text-secondary: rgba(0, 0, 0, 0.6) !important;
+  --border-color: rgba(0, 0, 0, 0.12) !important;
+  --surface-color: #ffffff !important;
+  --hover-color: #f5f5f5 !important;
+}
+
+// İkonların belirgin olması için stil
+.mat-icon {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+// Genel stil iyileştirmeleri
+.mat-mdc-card {
+  border-radius: 8px !important;
+  box-shadow: var(--card-shadow) !important;
+  background-color: var(--background-primary) !important;
+}
+
+.mat-mdc-card-header {
+  background-color: var(--background-primary) !important;
+  padding: 16px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-card-title {
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-card-content {
+  padding: 16px !important;
+  color: var(--text-primary) !important;
+  background-color: var(--surface-color) !important;
+}
+
+.mat-raised-button.mat-primary {
+  background-color: var(--mat-primary-color) !important;
+}
+
+.mat-raised-button.mat-accent {
+  background-color: var(--mat-accent-color) !important;
+}
+
+.mat-raised-button.mat-warn {
+  background-color: var(--mat-warn-color) !important;
 }

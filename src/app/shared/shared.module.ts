@@ -17,6 +17,8 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TimeAgoPipe } from "./pipes/time-ago.pipe";
+import { HasRoleDirective } from "./directives/has-role.directive";
+import { HasPermissionDirective } from "./directives/has-permission.directive";
 
 @NgModule({
   declarations: [TimeAgoPipe],

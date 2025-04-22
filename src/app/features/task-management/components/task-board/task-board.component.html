@@ -6,11 +6,52 @@
         <p>Görev Tahtası</p>
       </div>
       <div class="actions">
+        <!-- Filtreleme ve Sıralama Kontrolleri -->
+        <div class="filter-controls">
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Duruma Göre Filtrele</mat-label>
+            <mat-select
+              [(ngModel)]="statusFilter"
+              (selectionChange)="applyFilters()"
+            >
+              <mat-option value="all">Tümü</mat-option>
+              <mat-option value="TODO">Bekleyen</mat-option>
+              <mat-option value="IN_PROGRESS">Devam Eden</mat-option>
+              <mat-option value="DONE">Tamamlanan</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Önceliğe Göre Filtrele</mat-label>
+            <mat-select
+              [(ngModel)]="priorityFilter"
+              (selectionChange)="applyFilters()"
+            >
+              <mat-option value="all">Tümü</mat-option>
+              <mat-option value="HIGH">Yüksek</mat-option>
+              <mat-option value="MEDIUM">Orta</mat-option>
+              <mat-option value="LOW">Düşük</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            matTooltip="Filtreleri Sıfırla"
+            (click)="resetFilters()"
+          >
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+
         <button mat-flat-button color="primary" (click)="addNewTask()">
           <mat-icon>add</mat-icon>
           Yeni Görev
         </button>
-        <button mat-icon-button [routerLink]="['/projects', projectId]">
+        <button
+          mat-icon-button
+          [routerLink]="['/projects', projectId]"
+          *ngIf="projectId"
+        >
           <mat-icon>arrow_back</mat-icon>
         </button>
       </div>
@@ -48,7 +89,12 @@
         (cdkDropListDropped)="drop($event)"
         class="task-list"
       >
-        <mat-card *ngFor="let task of todoTasks" cdkDrag class="task-card">
+        <mat-card
+          *ngFor="let task of todoTasks"
+          cdkDrag
+          class="task-card todo"
+          (click)="openTaskDetails(task)"
+        >
           <mat-card-header>
             <mat-card-title>{{ task.title }}</mat-card-title>
             <mat-card-subtitle>{{ task.assignee }}</mat-card-subtitle>
@@ -86,7 +132,8 @@
         <mat-card
           *ngFor="let task of inProgressTasks"
           cdkDrag
-          class="task-card"
+          class="task-card in-progress"
+          (click)="openTaskDetails(task)"
         >
           <mat-card-header>
             <mat-card-title>{{ task.title }}</mat-card-title>
@@ -122,7 +169,12 @@
         (cdkDropListDropped)="drop($event)"
         class="task-list"
       >
-        <mat-card *ngFor="let task of doneTasks" cdkDrag class="task-card">
+        <mat-card
+          *ngFor="let task of doneTasks"
+          cdkDrag
+          class="task-card done"
+          (click)="openTaskDetails(task)"
+        >
           <mat-card-header>
             <mat-card-title>{{ task.title }}</mat-card-title>
             <mat-card-subtitle>{{ task.assignee }}</mat-card-subtitle>

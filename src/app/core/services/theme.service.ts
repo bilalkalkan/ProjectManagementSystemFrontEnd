@@ -13,7 +13,14 @@ export class ThemeService {
     const savedTheme = localStorage.getItem("darkMode");
     if (savedTheme) {
       this.setDarkMode(savedTheme === "true");
+    } else {
+      // Varsayılan olarak açık tema kullan
+      this.setDarkMode(false);
+      localStorage.setItem("darkMode", "false");
     }
+
+    // Başlangıçta açık temayı zorla
+    document.documentElement.classList.remove("dark-theme");
   }
 
   setDarkMode(isDark: boolean) {

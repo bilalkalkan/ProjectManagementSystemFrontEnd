@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:3000/api",
+  apiUrl: "/api", // Proxy ile yönlendirilecek
+  authApiUrl: "http://localhost:5113/api/Auth", // Auth API endpoint'i
 };

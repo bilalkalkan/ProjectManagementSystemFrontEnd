@@ -44,7 +44,7 @@ export class TaskListComponent implements OnInit {
   loadProjectDetails() {
     this.projectService.getProject(this.projectId!).subscribe({
       next: (project: Project) => {
-        this.pageTitle = project.title;
+        this.pageTitle = project.title || project.name || "Proje";
         this.pageDescription = "Proje Görevleri";
         this.displayedColumns = this.displayedColumns.filter(
           (col) => col !== "project"
@@ -89,7 +89,7 @@ export class TaskListComponent implements OnInit {
 
   getProjectTitle(projectId: string): string {
     const project = this.projects.find((p) => p.id === projectId);
-    return project ? project.title : "";
+    return project ? project.title || project.name || "" : "";
   }
 
   addNewTask() {

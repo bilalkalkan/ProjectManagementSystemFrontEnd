@@ -34,8 +34,8 @@
     <!-- Kullanıcı menüsü -->
     <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
       <img
-        [src]="user?.avatarUrl || 'assets/default-avatar.png'"
-        [alt]="user?.username"
+        [src]="getAvatarUrl()"
+        [alt]="user?.username || 'Kullanıcı'"
         class="user-avatar"
       />
       <mat-icon>arrow_drop_down</mat-icon>
@@ -75,13 +75,15 @@
   <mat-menu #userMenu="matMenu">
     <div class="user-info-header">
       <img
-        [src]="user?.avatarUrl || 'assets/default-avatar.png'"
-        [alt]="user?.username"
+        [src]="getAvatarUrl()"
+        [alt]="user?.username || 'Kullanıcı'"
         class="user-avatar"
       />
       <div class="user-details">
-        <div class="user-name">{{ user?.username }}</div>
-        <div class="user-email">{{ user?.email }}</div>
+        <div class="user-name">
+          {{ user?.userName || user?.username || "Kullanıcı" }}
+        </div>
+        <div class="user-email">{{ user?.email || "E-posta yok" }}</div>
       </div>
     </div>
     <mat-divider></mat-divider>

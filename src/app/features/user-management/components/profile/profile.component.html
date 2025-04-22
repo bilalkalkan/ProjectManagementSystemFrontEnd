@@ -11,11 +11,7 @@
       <div class="profile-content">
         <div class="avatar-section">
           <div class="avatar-wrapper">
-            <img
-              [src]="currentUser?.avatarUrl || 'assets/default-avatar.png'"
-              alt="Profil"
-              class="profile-avatar"
-            />
+            <img [src]="getAvatarUrl()" alt="Profil" class="profile-avatar" />
             <button
               mat-mini-fab
               color="primary"
@@ -37,20 +33,22 @@
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <mat-form-field appearance="outline">
-              <mat-label>Ad Soyad</mat-label>
-              <input matInput formControlName="name" />
-              <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
-                Ad soyad zorunludur
+              <mat-label>Ad</mat-label>
+              <input matInput formControlName="firstName" />
+              <mat-error
+                *ngIf="profileForm.get('firstName')?.hasError('required')"
+              >
+                Ad zorunludur
               </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Kullanıcı Adı</mat-label>
-              <input matInput formControlName="username" />
+              <mat-label>Soyad</mat-label>
+              <input matInput formControlName="lastName" />
               <mat-error
-                *ngIf="profileForm.get('username')?.hasError('required')"
+                *ngIf="profileForm.get('lastName')?.hasError('required')"
               >
-                Kullanıcı adı zorunludur
+                Soyad zorunludur
               </mat-error>
             </mat-form-field>
           </div>

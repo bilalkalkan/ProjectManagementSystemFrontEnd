@@ -9,45 +9,90 @@
       </a>
       <mat-divider></mat-divider>
       <div class="nav-section-label">Proje Yönetimi</div>
-      <a mat-list-item routerLink="/projects" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/projects"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('projects')"
+      >
         <mat-icon matListIcon>folder</mat-icon>
         <span>Projeler</span>
       </a>
-      <a mat-list-item routerLink="/tasks" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/tasks"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('tasks')"
+      >
         <mat-icon matListIcon>assignment</mat-icon>
         <span>Görevler</span>
       </a>
-      <a mat-list-item routerLink="/tasks/board" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/tasks/board"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('kanban')"
+      >
         <mat-icon matListIcon>view_kanban</mat-icon>
         <span>Kanban Board</span>
       </a>
-      <a mat-list-item routerLink="/tasks/gantt" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/tasks/gantt"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('gantt')"
+      >
         <mat-icon matListIcon>timeline</mat-icon>
         <span>Gantt Chart</span>
       </a>
       <mat-divider></mat-divider>
       <div class="nav-section-label">Ekip Yönetimi</div>
-      <a mat-list-item routerLink="/team" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/team"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('team')"
+      >
         <mat-icon matListIcon>group</mat-icon>
         <span>Takım</span>
       </a>
-      <a mat-list-item routerLink="/team/roles" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/team/roles"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('roles')"
+      >
         <mat-icon matListIcon>admin_panel_settings</mat-icon>
         <span>Roller & İzinler</span>
       </a>
       <mat-divider></mat-divider>
       <div class="nav-section-label">Planlama</div>
-      <a mat-list-item routerLink="/calendar" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/calendar"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('calendar')"
+      >
         <mat-icon matListIcon>calendar_today</mat-icon>
         <span>Takvim</span>
       </a>
-      <a mat-list-item routerLink="/meetings" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/meetings"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('meetings')"
+      >
         <mat-icon matListIcon>video_camera_front</mat-icon>
         <span>Toplantılar</span>
       </a>
       <mat-divider></mat-divider>
       <div class="nav-section-label">Raporlar & Analiz</div>
-      <a mat-list-item routerLink="/reports/overview" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/reports/overview"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('reportsOverview')"
+      >
         <mat-icon matListIcon>insights</mat-icon>
         <span>Genel Bakış</span>
       </a>
@@ -55,21 +100,37 @@
         mat-list-item
         routerLink="/reports/performance"
         routerLinkActive="active"
+        *ngIf="hasMenuPermission('reportsPerformance')"
       >
         <mat-icon matListIcon>speed</mat-icon>
         <span>Performans</span>
       </a>
-      <a mat-list-item routerLink="/reports/time" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/reports/time"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('reportsTime')"
+      >
         <mat-icon matListIcon>schedule</mat-icon>
         <span>Zaman Takibi</span>
       </a>
       <mat-divider></mat-divider>
       <div class="nav-section-label">Ayarlar</div>
-      <a mat-list-item routerLink="/settings" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/settings"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('settings')"
+      >
         <mat-icon matListIcon>settings</mat-icon>
         <span>Genel Ayarlar</span>
       </a>
-      <a mat-list-item routerLink="/profile" routerLinkActive="active">
+      <a
+        mat-list-item
+        routerLink="/profile"
+        routerLinkActive="active"
+        *ngIf="hasMenuPermission('profile')"
+      >
         <mat-icon matListIcon>person</mat-icon>
         <span>Profil</span>
       </a>

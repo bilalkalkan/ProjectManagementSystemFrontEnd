@@ -29,6 +29,11 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
         component: ProfileComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: "",
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+      },
     ]),
     MatCardModule,
     MatInputModule,
